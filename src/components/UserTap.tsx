@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useClicksStore } from "../store/clicks-store";
 import { useUserStore } from "../store/user-store";
-import { Link } from "react-router-dom";
 import { useDebounce } from "@uidotdev/usehooks";
 import { $http } from "@/lib/http";
 import levelConfig from "@/config/level-config";
@@ -78,18 +77,17 @@ export default function UserTap(props: React.HTMLProps<HTMLDivElement>) {
   }, []);
   return (
     <div {...props}>
-      <div className="mt-4 mb-8">
+      <div className="mt-10 mb-8">
         <button
           ref={userTapButtonRef}
           className="flex items-center justify-center mx-auto transition-all rounded-full outline-none select-none disabled:opacity-80 disabled:cursor-not-allowed"
           disabled={user.available_energy < user.earn_per_tap}
-          // onClick={tabMe}
           onPointerUp={tabMe}
         >
           <img
             src={levelConfig.frogs[user.level?.level || 1]}
             alt="level image"
-            className="object-contain max-w-full w-80 h-80"
+            className="object-contain max-w-full w-96 h-96"
             style={{ filter: levelConfig.filter[user.level?.level || 1] }}
           />
         </button>
@@ -106,30 +104,7 @@ export default function UserTap(props: React.HTMLProps<HTMLDivElement>) {
           </div>
         ))}
       </div>
-      <div className="flex items-center justify-between mb-2">
-        <div className="flex items-center space-x-2">
-          <img
-            src="/images/logo/2.png"
-            alt="coin"
-            className="object-contain w-8 h-8"
-          />
-          <span className="text-xs font-bold">
-            {user.available_energy} / {user.max_energy}
-          </span>
-        </div>
-        <Link
-          to={"/boost"}
-          className="flex items-center space-x-2 text-sm font-bold"
-        >
-          <span className="text-xs font-bold">Boost</span>
-
-          <img
-            src="/images/boost.png"
-            alt="boost"
-            className="object-contain w-8 h-8"
-          />
-        </Link>
-      </div>
+      
     </div>
   );
 }

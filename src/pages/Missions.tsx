@@ -1,23 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import MissionDrawer from "@/components/MissionDrawer";
-import Price from "@/components/Price";
-import UserGameDetails from "@/components/UserGameDetails";
 import { $http } from "@/lib/http";
-import { cn, compactNumber } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { uesStore } from "@/store";
 import { useUserStore } from "@/store/user-store";
 import { Mission } from "@/types/MissionType";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2Icon } from "lucide-react";
 import { useState } from "react";
+import Tasks from "@/components/Tasks";
+
 
 export default function Missions() {
   const user = useUserStore();
   const { missionTypes, totalReferals } = uesStore();
   const [activeType, setActiveType] = useState(missionTypes?.[0]);
-  const [openDrawer, setOpenDrawer] = useState(false);
-  const [selectedMission, setSelectedMission] = useState<Mission | null>(null);
-
+  
   const missions = useQuery({
     queryKey: ["/clicker/missions", activeType?.id],
     queryFn: () =>
@@ -29,31 +26,30 @@ export default function Missions() {
   });
 
   return (
-    <div className="flex flex-col justify-end bg-[url('/images/bg.png')] bg-cover flex-1">
-      <div className="flex flex-col flex-1 w-full h-full px-6 pb-24 mt-12 modal-body">
-        <UserGameDetails className="mt-4" />
-        <div className="flex items-center justify-center mt-10 space-x-1 text-gradient">
+    <div className="flex min-h-fit flex-col justify-around ">
+      
+      <div className="flex flex-col flex-1 w-full h-screen px-6  modal-body">
+        <div className="flex items-center justify-center mt-10 space-x-3 text-gradient">
           <img
-            src="/images/coins.png"
+            src="/images/logo/2.png"
             alt="coins"
-            className="object-contain w-14 h-14"
+            className="object-contain w-10 h-auto"
           />
           <span className="text-3xl font-bold">
             {Math.floor(user.balance)?.toLocaleString()}
           </span>
         </div>
-        <div className="mt-10">
+        <Tasks/>
+        <div className="h-fit mb-32  mt-10">
           <div className="flex gap-4">
             {missionTypes.map((type, key) => (
-              <button
+              <h3
                 key={key}
-                className={cn("text-xs font-bold uppercase", {
-                  "opacity-40": activeType.id !== type.id,
-                })}
-                onClick={() => setActiveType(type)}
+                className={"text-xs font-bold uppercase"}
+               
               >
-                Offical
-              </button>
+                Offical Partners
+              </h3>
             ))}
           </div>
           <div className="mt-6">
@@ -78,83 +74,21 @@ export default function Missions() {
                               totalReferals),
                       }
                     )}
-                    onClick={() => {
-                      if (
-                        !mission.next_level ||
-                        (mission?.required_user_level &&
-                          mission.required_user_level > user.level!.level) ||
-                        (mission.required_friends_invitation &&
-                          mission.required_friends_invitation > totalReferals)
-                      )
-                        return;
-                      setSelectedMission(mission);
-                      setOpenDrawer(true);
-                    }}
+               
                   >
-                    <div className="flex items-start flex-1 space-x-3">
+                    <div className="flex flex-col items-center  space-x-3">
                       <img
-                        src={mission.image}
+                        src={"images/avatar.png"}
                         alt={mission.name}
-                        className="object-contain w-16 h-16"
+                        className="object-contain w-28 h-auto"
                       />
                       <div className="flex flex-col">
-                        <p className="text-[10px] font-bold">{mission.name}</p>
-                        <p className="mt-1 text-[10px] font-medium">
-                          Profit per hour
-                        </p>
-                        <Price
-                          amount={
-                            mission.production_per_hour ||
-                            `+${mission.next_level?.production_per_hour || 0}`
-                          }
-                          className="mt-2 text-[10px]"
-                        />
+                        <p className="text-[13px] font-bold">{mission.name}</p>
+                      
+                      
                       </div>
                     </div>
-                    {mission.next_level && (
-                      <div className="pt-3 mt-3 border-t border-dashed border-white/10">
-                        <div className="flex items-center space-x-3">
-                          <p className="w-16 text-xs font-bold">
-                            LVL {mission.next_level?.level}
-                          </p>
-                          {mission.required_user_level &&
-                          mission.required_user_level > user.level!.level ? (
-                            <div className="flex items-center gap-2 text-[10px]">
-                              <img
-                                src="/images/lock.png"
-                                alt="lock"
-                                className="object-contain w-5 h-5"
-                              />
-                              <span>
-                                Mission required lvl{" "}
-                                {mission.required_user_level}
-                              </span>
-                            </div>
-                          ) : mission.required_friends_invitation &&
-                            mission.required_friends_invitation >
-                              totalReferals ? (
-                            <div className="flex items-center gap-2 text-[10px]">
-                              <img
-                                src="/images/lock.png"
-                                alt="lock"
-                                className="object-contain w-5 h-5"
-                              />
-                              <span>
-                                Mission required friends{" "}
-                                {mission.required_friends_invitation} invited
-                              </span>
-                            </div>
-                          ) : (
-                            mission.next_level?.cost && (
-                              <Price
-                                amount={compactNumber(mission.next_level?.cost)}
-                                className="text-[10px]"
-                              />
-                            )
-                          )}
-                        </div>
-                      </div>
-                    )}
+                  
                   </div>
                 ))
               )}
@@ -162,11 +96,7 @@ export default function Missions() {
           </div>
         </div>
       </div>
-      <MissionDrawer
-        open={openDrawer}
-        onOpenChange={setOpenDrawer}
-        mission={selectedMission}
-      />
+      
     </div>
   );
 }

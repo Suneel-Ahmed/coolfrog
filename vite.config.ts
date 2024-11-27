@@ -13,7 +13,7 @@ export default defineConfig({
   // server: {
   //   proxy: {
   //     "/api": {
-  //       target: "http://clicker-game-api.me",
+  //       target: "http://bonzeecoinapi.infinityfreeapp.com",
   //       changeOrigin: true,
   //     },
   //   },

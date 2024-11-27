@@ -1,7 +1,6 @@
 import UserTap from "../components/UserTap";
 import { useUserStore } from "../store/user-store";
 import { Link } from "react-router-dom";
-// import UserGameDetails from "@/components/UserGameDetails";
 // import levelConfig from "@/config/level-config";
 import { uesStore } from "@/store";
 
@@ -10,13 +9,13 @@ export default function Home() {
   const { maxLevel } = uesStore();
   return (
     <div
-      className="flex-1 px-5 pb-20 bg-center bg-cover"
+      className="flex-1 px-5 pb-20 bg-center modal-body"
      
     >
       <header className="flex items-center justify-between mt-4">
         <div className="flex items-center gap-2 px-3 py-2 border-2 rounded-full bg-black/20 border-white/10">
           <img
-            src="/images/logo/2.png"
+            src="/images/logo/logo.png"
             alt="user-avatar"
             className="object-cover w-8 h-8 rounded-full"
           />
@@ -25,7 +24,6 @@ export default function Home() {
           </p>
         </div>
       </header>
-      {/* <UserGameDetails className="mt-6" /> */}
       <div className="flex mt-6 space-x-1.5 justify-center items-center select-none">
         <img
           src="/images/logo/2.png"
