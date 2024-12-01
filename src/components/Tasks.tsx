@@ -16,7 +16,7 @@ export default function Tasks() {
   const [activeType, setActiveType] = useState(missionTypes?.[0]);
   const [openDrawer, setOpenDrawer] = useState(false);
   const [selectedMission, setSelectedMission] = useState<Mission | null>(null);
-
+  const [visibleCount, setVisibleCount] = useState(4);
   const missions = useQuery({
     queryKey: ["/clicker/missions", activeType?.id],
     queryFn: () =>
@@ -26,7 +26,11 @@ export default function Tasks() {
     staleTime: 1000 * 60,
     enabled: !!activeType?.id,
   });
-// console.log("mission" , missions.data[4])
+
+  const handleShowMore = () => {
+    setVisibleCount((prev) => prev + 4); // Increment visible items by 4
+  };
+
   return (
     <>
     
@@ -50,7 +54,7 @@ export default function Tasks() {
                 </div>
               ) : (
                 missions.data &&
-                missions.data.map((mission, key) => (
+                missions.data.slice(0, visibleCount).map((mission, key) => (
                   <div
                     key={key}
                     className={
@@ -87,6 +91,16 @@ export default function Tasks() {
                 ))
               )}
             </div>
+            {missions.data && visibleCount < missions.data.length && ( // Show button if more items are available
+            <div className="text-center mt-4">
+              <button
+                onClick={handleShowMore}
+                className="px-4 py-2 border rounded-[20px] hover:text-orange-500 hover:border-orange-500  text-white"
+              >
+                Show More
+              </button>
+            </div>
+          )}
           </div>
         </div>
         <MissionDrawer

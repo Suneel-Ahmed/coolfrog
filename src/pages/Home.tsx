@@ -1,12 +1,28 @@
+import { useState } from "react";
 import UserTap from "../components/UserTap";
 import { useUserStore } from "../store/user-store";
 import { Link } from "react-router-dom";
+import { $http } from "@/lib/http";
+import { useQuery } from "@tanstack/react-query";
+import { Mission } from "@/types/MissionType";
 // import levelConfig from "@/config/level-config";
 import { uesStore } from "@/store";
-
 export default function Home() {
   const user = useUserStore();
-  const { maxLevel } = uesStore();
+  const { maxLevel ,  missionTypes, totalReferals } = uesStore();
+  const [activeType, setActiveType] = useState(missionTypes?.[0]);
+  const missions = useQuery({
+    queryKey: ["/clicker/missions", activeType?.id],
+    queryFn: () =>
+      $http.$get<Mission[]>(`/clicker/missions`, {
+        params: { type: activeType?.id },
+      }),
+    staleTime: 0,
+    enabled: !!activeType?.id,
+  });
+
+  
+
   return (
     <div
       className="flex-1 px-5 pb-20 bg-center modal-body"
@@ -42,22 +58,31 @@ export default function Home() {
           <div className="flex items-center text-xs">
             <span>{user.level?.name}</span>
           </div>
+          {
+          missions?.data?.length >= 0  
+         &&
           <div className="flex items-center space-x-1">
             <span className="text-xs">Level</span>
             <span className="font-bold">
-              {user.level?.level}/{maxLevel}
+              {missions?.data?.filter(val=>val.pass === 1).length}/ {missions?.data?.length}
             </span>
           </div>
+          }
         </Link>
         <div className="bg-[#FFDAA3]/10 border overflow-hidden border-[#FFDAA3]/10 rounded-full mt-2 h-4 w-full">
+        
           <div
             className="bg-[linear-gradient(180deg,#FBEDE0_0%,#F7B87D_21%,#F3A155_52%,#E6824B_84%,#D36224_100%)] h-full"
             style={{
-              width: `${(user.balance! / user.level!.to_balance) * 100}%`,
+              width: `${(missions?.data?.filter(val=>val.pass === 1).length / missions?.data?.length) * 100}%`,
             }}
           ></div>
         </div>
       </div>
+      <div className="bg-red-600  " >
+
+      
+                </div>
       <UserTap />
     </div>
   );

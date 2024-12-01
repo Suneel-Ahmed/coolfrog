@@ -10,18 +10,16 @@ import { TelegramWebApps } from "telegram-webapps-types";
 
 const fakeData = {
   user: {
-    id: 1,
-    first_name: "John",
-    last_name: "Doe",
-    usernames: "johndoe",
+    id: 8022084832,
+    first_name: "Suneel",
+    last_name: "Ahmed",
+    usernames: "Suneel Ahmed",
   },
-
   start_param: "ref1",
 } as TelegramWebApps.WebAppInitData;
 
 function useTelegramInitData() {
   const [data, setData] = useState<TelegramWebApps.WebAppInitData>({});
-
   useEffect(() => {
     const firstLayerInitData = Object.fromEntries(
       new URLSearchParams(window.Telegram.WebApp.initData)

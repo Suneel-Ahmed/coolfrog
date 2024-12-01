@@ -2,7 +2,7 @@ import { useState } from "react";
 import Drawer, { DrawerProps } from "./ui/drawer";
 import { toast } from "react-toastify";
 import { Mission } from "@/types/MissionType";
-import { NavLink } from "react-router-dom";
+import { NavLink , useNavigate } from "react-router-dom";
 import axios from "axios";
 const token = localStorage.getItem("token");
 export default function MissionDrawer({
@@ -13,7 +13,7 @@ export default function MissionDrawer({
 }) {
 
   const [code , setcode] = useState("")
-
+const navigate = useNavigate()
   const submitCode = async () => {
     if (code === mission.code) {
 
@@ -21,7 +21,7 @@ export default function MissionDrawer({
       try {
 
         const res = await axios.put(
-          `http://127.0.0.1:8000/api/clicker/missions/${mission.id}`,
+          `${import.meta.env.VITE_API_URL}/api/clicker/missions/${mission.id}`,
           { pass: 1 },
           {
             headers: {
@@ -29,8 +29,9 @@ export default function MissionDrawer({
             },
           }
         );
-        console.log(res)
-       setcode("")
+        setcode("")
+        setPopup(false)
+        navigate('/offical')
         toast.success("Task Completed");
       } catch (error) {
         console.error("Failed to update mission:", error);
@@ -45,7 +46,7 @@ export default function MissionDrawer({
 
   if (!mission || mission.pass !== 0) return null;
   return (
-    <Drawer {...props}>
+    <Drawer {...props}   >
       <img
         src={mission.image}
         alt={mission.name}

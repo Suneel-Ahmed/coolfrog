@@ -14,7 +14,6 @@ export default function Missions() {
   const user = useUserStore();
   const { missionTypes, totalReferals } = uesStore();
   const [activeType, setActiveType] = useState(missionTypes?.[0]);
-  
   const missions = useQuery({
     queryKey: ["/clicker/missions", activeType?.id],
     queryFn: () =>
@@ -60,7 +59,7 @@ export default function Missions() {
                 </div>
               ) : (
                 missions.data &&
-                missions.data.map((mission, key) => (
+                missions.data.slice(0, 4).map((mission, key) => (
                   <div
                     key={key}
                     className={cn(

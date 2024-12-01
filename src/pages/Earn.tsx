@@ -48,7 +48,7 @@ export default function Earn() {
     <div className="flex flex-col justify-end bg-[url('/images/bg.png')] bg-cover flex-1">
       <div className="flex flex-col flex-1 w-full h-full px-6 py-8 pb-24 mt-12 modal-body">
         <img
-          src="/images/coins.png"
+          src="/images/bounty.png"
           alt="coins-3"
           className="object-contain w-32 h-32 mx-auto"
         />
