@@ -9,7 +9,7 @@ import { Mission } from "@/types/MissionType";
 import { uesStore } from "@/store";
 export default function Home() {
   const user = useUserStore();
-  const { maxLevel ,  missionTypes, totalReferals } = uesStore();
+  const { missionTypes } = uesStore();
   const [activeType, setActiveType] = useState(missionTypes?.[0]);
   const missions = useQuery({
     queryKey: ["/clicker/missions", activeType?.id],
@@ -51,24 +51,24 @@ export default function Home() {
         </span>
       </div>
       <div className="">
-        <Link
-          to={"/leaderboard"}
+        <div
+        
           className="flex items-center justify-between gap-2"
         >
           <div className="flex items-center text-xs">
-            <span>{user.level?.name}</span>
+            <span>{"Season 1"}</span>
           </div>
           {
           missions?.data?.length >= 0  
          &&
           <div className="flex items-center space-x-1">
-            <span className="text-xs">Level</span>
+            <span className="text-xs">Tasks</span>
             <span className="font-bold">
               {missions?.data?.filter(val=>val.pass === 1).length}/ {missions?.data?.length}
             </span>
           </div>
           }
-        </Link>
+        </div>
         <div className="bg-[#FFDAA3]/10 border overflow-hidden border-[#FFDAA3]/10 rounded-full mt-2 h-4 w-full">
         
           <div

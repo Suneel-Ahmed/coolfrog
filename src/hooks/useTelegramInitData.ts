@@ -13,7 +13,7 @@ const fakeData = {
     id: 8022084832,
     first_name: "Suneel",
     last_name: "Ahmed",
-    usernames: "Suneel Ahmed",
+    usernames: "",
   },
   start_param: "ref1",
 } as TelegramWebApps.WebAppInitData;

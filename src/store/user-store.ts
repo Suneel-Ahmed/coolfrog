@@ -1,13 +1,9 @@
-import { UserType } from "@/types/UserType";
 import { create } from "zustand";
 
-type UserStore = UserType & {
-  UserTap: () => boolean;
-  incraseEnergy: (value: number) => void;
-};
 
-export const useUserStore = create<UserStore>((set, get) => ({
-  telegram_id: 0,
+
+export const useUserStore = create(() => ({
+  telegram_id: 0 ,
   max_energy: 0,
   balance: 0,
   earn_per_tap: 0,
@@ -23,5 +19,4 @@ export const useUserStore = create<UserStore>((set, get) => ({
   production_per_hour: 0,
   updated_at: "",
   username: "",
- 
 }));
