@@ -12,7 +12,7 @@ import { useMemo, useState } from "react";
 import { toast } from "react-toastify";
 
 const shareMessage = encodeURI(
-  "Play Cool Frog with me!"
+  "Bonzee Coin with me!"
 );
 
 export default function Friends() {
@@ -23,7 +23,7 @@ export default function Friends() {
   const [showMoreBonuses, setShowMoreBonuses] = useState(false);
 
   const referralLink = useMemo(
-    () => `${import.meta.env.VITE_BOT_URL}/?startapp=ref${telegram_id}`,
+    () => `https://t.me/MaazDemoAppbOT/?startapp=ref${telegram_id}`,
     [telegram_id]
   );
 
@@ -87,12 +87,7 @@ export default function Friends() {
           <div className="absolute inset-0 w-full h-[calc(100%-1rem)] py-6 mt-4 overflow-y-scroll">
             {!showMoreBonuses ? (
               <div className="text-center">
-                <button
-                  className="rounded-full border-2 border-[#FFDAA3]/10 text-[#FFDAA3] text-xs font-bold py-2.5 px-4"
-                  onClick={() => setShowMoreBonuses((value) => !value)}
-                >
-                  More bonuses
-                </button>
+               
               </div>
             ) : (
               <>

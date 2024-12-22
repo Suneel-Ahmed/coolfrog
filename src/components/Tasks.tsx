@@ -1,35 +1,30 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import MissionDrawer from "@/components/MissionDrawer";
 import { $http } from "@/lib/http";
-import { uesStore } from "@/store";
+// import { uesStore } from "@/store";
 // import { useUserStore } from "@/store/user-store";
-import { Mission } from "@/types/MissionType";
+// import { Mission } from "@/types/MissionType";
 import { useQuery } from "@tanstack/react-query";
-import { Loader2Icon } from "lucide-react";
+// import { Loader2Icon } from "lucide-react";
 import { useState } from "react";
-import { FaCheck , FaXmark  } from "react-icons/fa6";
+// import { FaCheck , FaXmark  } from "react-icons/fa6";
 
 
 export default function Tasks() {
   // const user = useUserStore();
-  const { missionTypes, totalReferals } = uesStore();
-  const [activeType, setActiveType] = useState(missionTypes?.[0]);
+  // const { missionTypes, totalReferals } = uesStore();
+  // const [activeType, setActiveType] = useState(missionTypes?.[0]);
   const [openDrawer, setOpenDrawer] = useState(false);
-  const [selectedMission, setSelectedMission] = useState<Mission | null>(null);
+  const [selectedMission, setSelectedMission] = useState(null);
   const [visibleCount, setVisibleCount] = useState(4);
+  
   const missions = useQuery({
-    queryKey: ["/clicker/missions", activeType?.id],
+    queryKey: ["/clicker/offical_tasks"],
     queryFn: () =>
-      $http.$get<Mission[]>(`/clicker/missions`, {
-        params: { type: activeType?.id },
-      }),
+      $http.$get(`/clicker/offical_tasks`),
     staleTime: 1000 * 60,
-    enabled: !!activeType?.id,
   });
-
-  const handleShowMore = () => {
-    setVisibleCount((prev) => prev + 4); // Increment visible items by 4
-  };
+console.log("Mission" , missions)
 
   return (
     <>
@@ -48,13 +43,9 @@ export default function Tasks() {
           </div>
           <div className="mt-6">
             <div className="grid grid-cols-1 gap-3">
-              {missions.isLoading ? (
-                <div className="flex items-center justify-center h-full col-span-2 mt-6">
-                  <Loader2Icon className="w-12 h-12 animate-spin text-primary" />
-                </div>
-              ) : (
+              {
                 missions.data &&
-                missions.data.slice(0, visibleCount).map((mission, key) => (
+                missions.data.missions.map((mission, key) => (
                   <div
                     key={key}
                     className={
@@ -68,7 +59,7 @@ export default function Tasks() {
                       <div className="flex items-center flex-1 space-x-5" >
 
                       <img
-                        src={mission.image}
+                        src={`http://localhost:8000/${mission.image}`}
                         alt={mission.name}
                         className="object-contain   w-16 h-16"
                         />
@@ -78,20 +69,20 @@ export default function Tasks() {
                       
                       </div>
                         </div>
-                      <div className="ms-auto " >
+                      {/* <div className="ms-auto " >
                       {
                         mission.pass !== 0 ?
                         <FaCheck className="text-green-400" /> :
                         <FaXmark className="text-red-400" />       
                       }
-                      </div>
+                      </div> */}
                     </div>
                    
                   </div>
                 ))
-              )}
+              }
             </div>
-            {missions.data && visibleCount < missions.data.length && ( // Show button if more items are available
+            {/* {missions.data.missions && visibleCount < missions.data.missions.length && ( // Show button if more items are available
             <div className="text-center mt-4">
               <button
                 onClick={handleShowMore}
@@ -100,7 +91,7 @@ export default function Tasks() {
                 Show More
               </button>
             </div>
-          )}
+          )} */}
           </div>
         </div>
         <MissionDrawer

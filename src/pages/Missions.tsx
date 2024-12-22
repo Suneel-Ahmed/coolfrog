@@ -1,29 +1,22 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { $http } from "@/lib/http";
 import { cn } from "@/lib/utils";
-import { uesStore } from "@/store";
+// import axios from "axios";
+// import { useEffect } from "react";
 import { useUserStore } from "@/store/user-store";
-import { Mission } from "@/types/MissionType";
 import { useQuery } from "@tanstack/react-query";
-import { Loader2Icon } from "lucide-react";
-import { useState } from "react";
 import Tasks from "@/components/Tasks";
 
 
 export default function Missions() {
   const user = useUserStore();
-  const { missionTypes, totalReferals } = uesStore();
-  const [activeType, setActiveType] = useState(missionTypes?.[0]);
   const missions = useQuery({
-    queryKey: ["/clicker/missions", activeType?.id],
+    queryKey: ["/clicker/offical_tasks"],
     queryFn: () =>
-      $http.$get<Mission[]>(`/clicker/missions`, {
-        params: { type: activeType?.id },
-      }),
+      $http.$get(`/clicker/offical_tasks`),
     staleTime: 1000 * 60,
-    enabled: !!activeType?.id,
   });
-
+console.log("Mission" , missions)
   return (
     <div className="flex min-h-fit flex-col justify-around ">
       
@@ -38,40 +31,25 @@ export default function Missions() {
             {Math.floor(user.balance)?.toLocaleString()}
           </span>
         </div>
-        <Tasks/>
+        <Tasks missions = {missions} />
         <div className="h-fit mb-32  mt-10">
           <div className="flex gap-4">
-            {missionTypes.map((type, key) => (
               <h3
-                key={key}
                 className={"text-xs font-bold uppercase"}
                
               >
                 Offical Partners
               </h3>
-            ))}
           </div>
           <div className="mt-6">
             <div className="grid grid-cols-2 gap-3">
-              {missions.isLoading ? (
-                <div className="flex items-center justify-center h-full col-span-2 mt-6">
-                  <Loader2Icon className="w-12 h-12 animate-spin text-primary" />
-                </div>
-              ) : (
+              {
                 missions.data &&
-                missions.data.slice(0, 4).map((mission, key) => (
+                missions.data?.missions?.map((mission, key) => (
                   <div
                     key={key}
                     className={cn(
-                      "flex flex-col py-3 px-3 bg-[#D9D9D9]/10 rounded-xl cursor-pointer",
-                      {
-                        "opacity-40 cursor-not-allowed":
-                          (mission?.required_user_level &&
-                            mission.required_user_level > user.level!.level) ||
-                          (mission.required_friends_invitation &&
-                            mission.required_friends_invitation >
-                              totalReferals),
-                      }
+                      "flex flex-col py-3 px-3 bg-[#D9D9D9]/10 rounded-xl cursor-pointer"
                     )}
                
                   >
@@ -90,7 +68,7 @@ export default function Missions() {
                   
                   </div>
                 ))
-              )}
+              }
             </div>
           </div>
         </div>

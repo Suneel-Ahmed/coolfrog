@@ -9,7 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import { $http } from "@/lib/http";
 import { cn } from "@/lib/utils";
 import { uesStore } from "@/store";
-import LoadingPage from "@/components/LoadingPage";
+// import LoadingPage from "@/components/LoadingPage";
 import ReferralTaskDrawer from "@/components/ReferralTaskDrawer";
 
 export default function Earn() {
@@ -22,27 +22,30 @@ export default function Earn() {
   const [activeReferralTask, setActiveReferralTask] =
     useState<ReferralTaskType | null>(null);
 
-  const { data, isLoading } = useQuery({
+  const  data  = useQuery({
     queryKey: ["tasks"],
     queryFn: () => $http.$get<TaskType[]>("/clicker/tasks"),
   });
+console.log(data?.data?.data)
+
 
   const referralTasks = useQuery({
     queryKey: ["referral-tasks"],
     queryFn: () => $http.$get<ReferralTaskType[]>("/clicker/referral-tasks"),
   });
+  console.log(referralTasks)
 
   const videoTasks = useMemo(
-    () => data?.filter((task) => task.type === "video") || [],
+    () => data?.data && data?.data?.data?.filter((task) => task.type === "video") || [],
     [data]
   );
 
   const otherTasks = useMemo(
-    () => data?.filter((task) => task.type === "other") || [],
+    () => data?.data && data?.data?.data?.filter((task) => task.type === "other") || [],
     [data]
   );
 
-  if (isLoading) return <LoadingPage />;
+  // if (isLoading) return <LoadingPage />;
 
   return (
     <div className="flex flex-col justify-end bg-[url('/images/bg.png')] bg-cover flex-1">
