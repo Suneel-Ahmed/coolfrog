@@ -9,7 +9,6 @@ import { useQuery } from "@tanstack/react-query";
 import { $http } from "@/lib/http";
 import { cn } from "@/lib/utils";
 import { uesStore } from "@/store";
-// import LoadingPage from "@/components/LoadingPage";
 import ReferralTaskDrawer from "@/components/ReferralTaskDrawer";
 
 export default function Earn() {
@@ -24,24 +23,22 @@ export default function Earn() {
 
   const  data  = useQuery({
     queryKey: ["tasks"],
-    queryFn: () => $http.$get<TaskType[]>("/clicker/tasks"),
+    queryFn: () => $http.$get<any>("/clicker/tasks"),
   });
-console.log(data?.data?.data)
 
 
-  const referralTasks = useQuery({
+  const referralTasks : any = useQuery({
     queryKey: ["referral-tasks"],
-    queryFn: () => $http.$get<ReferralTaskType[]>("/clicker/referral-tasks"),
+    queryFn: () => $http.$get<any>("/clicker/referral-tasks"),
   });
-  console.log(referralTasks)
 
-  const videoTasks = useMemo(
-    () => data?.data && data?.data?.data?.filter((task) => task.type === "video") || [],
+  const videoTasks : any = useMemo(
+    () => data?.data && data?.data?.data?.filter((task : any) => task.type === "video") || [],
     [data]
   );
 
-  const otherTasks = useMemo(
-    () => data?.data && data?.data?.data?.filter((task) => task.type === "other") || [],
+  const otherTasks : any = useMemo(
+    () => data?.data && data?.data?.data?.filter((task : any ) => task.type === "other") || [],
     [data]
   );
 
@@ -62,7 +59,7 @@ console.log(data?.data?.data)
           <>
             <p className="mt-2.5 font-medium text-center">Cool Frog YouTube</p>
             <div className="mt-4 space-y-2">
-              {videoTasks.map((item) => (
+              {videoTasks.map((item : any) => (
                 <ListItem
                   key={item.id}
                   title={item.name}
@@ -102,7 +99,7 @@ console.log(data?.data?.data)
           <>
             <p className="mt-8 font-medium text-center">All Tasks</p>
             <div className="mt-4 space-y-2">
-              {otherTasks.map((item) => (
+              {otherTasks.map((item : any) => (
                 <ListItem
                   key={item.id}
                   title={item.name}
@@ -132,7 +129,7 @@ console.log(data?.data?.data)
           <>
             <p className="mt-8 font-medium text-center">Referral Tasks</p>
             <div className="mt-4 space-y-2">
-              {referralTasks.data.map((item) => (
+              {referralTasks.data.map((item : any)  => (
                 <ListItem
                   key={item.id}
                   title={item.title}

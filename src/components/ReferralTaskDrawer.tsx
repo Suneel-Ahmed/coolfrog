@@ -57,7 +57,7 @@ export default function ReferralTaskDrawer({
       </div>
 
       <Button
-        className="w-full mt-6"
+        className="w-full rounded-[20px] mt-6"
         disabled={
           claimMutation.isPending ||
           !!task.is_completed ||

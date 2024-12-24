@@ -70,7 +70,7 @@ export default function DailyDrawer({ ...props }: DrawerProps) {
         ))}
       </div>
       <Button
-        className="w-full mt-6"
+        className="w-full rounded-[20px] mt-6"
         disabled={
           !dailyTasks.data?.some((item) => item.available && !item.completed) ||
           claimTaskMutation.isPending ||

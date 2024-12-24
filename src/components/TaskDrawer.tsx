@@ -79,7 +79,7 @@ export default function TaskDrawer({
           </p>
         )}
       <Button
-        className="w-full mt-12"
+        className="w-full rounded-[20px] mt-12"
         asChild
         onClick={() => submitMutation.mutate()}
       >
@@ -90,7 +90,7 @@ export default function TaskDrawer({
 
       {!task.is_rewarded && (
         <Button
-          className="w-full mt-6"
+          className="w-full rounded-[20px] mt-6"
           disabled={
             claimMutation.isPending ||
             !task.is_submitted ||

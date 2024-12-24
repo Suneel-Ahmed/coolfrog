@@ -5,7 +5,7 @@ export default function UserGameDetails({
   className,
   ...props
 }: React.HtmlHTMLAttributes<HTMLDivElement>) {
-  const user = useUserStore();
+  const user: any = useUserStore();
   return (
     <div
       className={cn("flex items-stretch justify-between gap-2", className)}

@@ -1,30 +1,48 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import MissionDrawer from "@/components/MissionDrawer";
 import { $http } from "@/lib/http";
-// import { uesStore } from "@/store";
-// import { useUserStore } from "@/store/user-store";
+import { uesStore } from "@/store";
+import { useUserStore } from "@/store/user-store";
 // import { Mission } from "@/types/MissionType";
 import { useQuery } from "@tanstack/react-query";
 // import { Loader2Icon } from "lucide-react";
 import { useState } from "react";
-// import { FaCheck , FaXmark  } from "react-icons/fa6";
-
+import { FaCheck , FaXmark  } from "react-icons/fa6";
+// interface MissionsData {
+//   missions: [];
+// }
 
 export default function Tasks() {
-  // const user = useUserStore();
+  const user = useUserStore();
   // const { missionTypes, totalReferals } = uesStore();
-  // const [activeType, setActiveType] = useState(missionTypes?.[0]);
-  const [openDrawer, setOpenDrawer] = useState(false);
+  const { missionTypes } = uesStore();
+  const activeType : any = missionTypes?.[0];
+    const [openDrawer, setOpenDrawer] = useState(false);
   const [selectedMission, setSelectedMission] = useState(null);
   const [visibleCount, setVisibleCount] = useState(4);
   
-  const missions = useQuery({
+  const missions:any = useQuery({
     queryKey: ["/clicker/offical_tasks"],
     queryFn: () =>
       $http.$get(`/clicker/offical_tasks`),
     staleTime: 1000 * 60,
   });
-console.log("Mission" , missions)
+
+
+  
+  const completedTasks : any  = useQuery({
+    queryKey: [`/clicker/offical_tasks/status/${user.id}`],
+    queryFn: () =>
+      $http.$get<any[]>(`/clicker/offical_tasks/status/${user.id}`),
+    staleTime: 0,
+    enabled: !!activeType?.id,
+  });
+
+  console.log("officalTasks" , missions , completedTasks)
+
+const handleShowMore = ()=>{
+  setVisibleCount(visibleCount + 1)
+}
 
   return (
     <>
@@ -44,45 +62,59 @@ console.log("Mission" , missions)
           <div className="mt-6">
             <div className="grid grid-cols-1 gap-3">
               {
-                missions.data &&
-                missions.data.missions.map((mission, key) => (
+                missions?.data &&
+                missions?.data?.missions?.map((mission : any, key : number) => (
                   <div
                     key={key}
                     className={
                       "flex flex-col  py-3 px-3  bg-[#D9D9D9]/10 rounded-xl cursor-pointer"}
-                    onClick={() => {
-                      setSelectedMission(mission);
-                      setOpenDrawer(true);
-                    }}
+                      onClick={() => {
+                        setSelectedMission(mission);
+                        if (
+                          completedTasks?.data?.some(
+                            (item: any) =>
+                              item.task_id === mission.id && item.user_id === user.id
+                          )
+                        ) {
+                          setOpenDrawer(false);
+                        } else {
+                          setOpenDrawer(true);
+                        }
+                      }}
                   >
                     <div className="flex items-center justify-between ">
                       <div className="flex items-center flex-1 space-x-5" >
 
                       <img
-                        src={`http://localhost:8000/${mission.image}`}
-                        alt={mission.name}
+                        src={`${import.meta.env.VITE_API_URL}/${mission?.image}`}
+                        alt={mission?.name}
                         className="object-contain   w-16 h-16"
                         />
                       <div className="flex justify-center h-full flex-col">
-                        <p className="text-[14px] font-bold"> {mission.name}</p>
+                        <p className="text-[14px] font-bold"> {mission?.name}</p>
                         
                       
                       </div>
                         </div>
-                      {/* <div className="ms-auto " >
-                      {
-                        mission.pass !== 0 ?
-                        <FaCheck className="text-green-400" /> :
-                        <FaXmark className="text-red-400" />       
-                      }
-                      </div> */}
+                        <div className="ms-auto">
+            {
+              completedTasks?.data?.some(
+                (item: any) =>
+                  item.task_id === mission.id && item.user_id === user.id
+              ) ? (
+                <FaCheck className="text-green-400" />
+              ) : (
+                <FaXmark className="text-red-400" />
+              )
+            }
+          </div>
                     </div>
                    
                   </div>
                 ))
               }
             </div>
-            {/* {missions.data.missions && visibleCount < missions.data.missions.length && ( // Show button if more items are available
+            {missions?.data?.missions && visibleCount < missions?.data?.missions?.length && ( // Show button if more items are available
             <div className="text-center mt-4">
               <button
                 onClick={handleShowMore}
@@ -91,7 +123,7 @@ console.log("Mission" , missions)
                 Show More
               </button>
             </div>
-          )} */}
+          )}
           </div>
         </div>
         <MissionDrawer

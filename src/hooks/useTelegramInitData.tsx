@@ -10,22 +10,22 @@ import { TelegramWebApps } from "telegram-webapps-types";
 
 const fakeData = {
   user: {
-    id: 8022084832,
-    first_name: "Suneel",
-    last_name: "Ahmed",
+    id: 8022084831,
+    first_name: "ahaha",
+    last_name: "ahaha",
     usernames: "",
   },
-  start_param: "ref1",
+  start_param: "ref",
 } as TelegramWebApps.WebAppInitData;
 
 function useTelegramInitData() {
-  const [data, setData] = useState<TelegramWebApps.WebAppInitData>({});
+  const [data, setData] = useState<any>({});
   useEffect(() => {
     const firstLayerInitData = Object.fromEntries(
       new URLSearchParams(window.Telegram.WebApp.initData)
     );
 
-    const initData: Record<string, string> = {};
+    const initData :any = {};
 
     for (const key in firstLayerInitData) {
       try {
@@ -35,7 +35,7 @@ function useTelegramInitData() {
       }
     }
 
-    setData(import.meta.env.DEV ? fakeData : initData);
+    setData(initData ?  fakeData : initData  );
   }, []);
 
   return data;

@@ -12,7 +12,7 @@ import { useMemo, useState } from "react";
 import { toast } from "react-toastify";
 
 const shareMessage = encodeURI(
-  "Bonzee Coin with me!"
+  "Boze Coin with me!"
 );
 
 export default function Friends() {
@@ -23,7 +23,7 @@ export default function Friends() {
   const [showMoreBonuses, setShowMoreBonuses] = useState(false);
 
   const referralLink = useMemo(
-    () => `https://t.me/MaazDemoAppbOT/?startapp=ref${telegram_id}`,
+    () => `https://t.me/BozeCoinBot/?startapp=ref${telegram_id}`,
     [telegram_id]
   );
 
@@ -50,33 +50,12 @@ export default function Friends() {
               <p>Invite a friend</p>
               <div className="flex items-center space-x-1">
                 <img
-                  src="/images/coin.png"
+                  src="/images/logo/2.png"
                   alt="coin"
                   className="object-contain w-5 h-5"
                 />
                 <span className="font-bold text-primary">
-                  +{referral.base.welcome.toLocaleString()}
-                </span>
-                <span className="text-sm">for you and your friend</span>
-              </div>
-            </div>
-          </button>
-          <button className="flex items-center w-full gap-4 px-4 py-2 bg-white/10 rounded-xl">
-            <img
-              src="/images/chest.png"
-              alt="chest"
-              className="object-contain w-9 h-9 mix-blend-screen"
-            />
-            <div className="text-sm font-medium">
-              <p>Invite a friend with Telegram premium</p>
-              <div className="flex items-center space-x-1">
-                <img
-                  src="/images/coin.png"
-                  alt="coin"
-                  className="object-contain w-5 h-5"
-                />
-                <span className="font-bold text-primary">
-                  +{referral.premium.welcome.toLocaleString()}
+                  +5
                 </span>
                 <span className="text-sm">for you and your friend</span>
               </div>
@@ -119,7 +98,7 @@ export default function Friends() {
                               <td className="px-2 py-2">
                                 <div className="flex items-center justify-end gap-1">
                                   <img
-                                    src="/images/coin.png"
+                                    src="/images/logo/2.png"
                                     alt="coin"
                                     className="object-contain w-4 h-4"
                                   />
@@ -133,7 +112,7 @@ export default function Friends() {
                               <td className="px-2 py-2">
                                 <div className="flex items-center justify-end gap-1">
                                   <img
-                                    src="/images/coin.png"
+                                    src="/images/logo/2.png"
                                     alt="coin"
                                     className="object-contain w-4 h-4"
                                   />
@@ -170,11 +149,7 @@ export default function Friends() {
                     className="flex items-center justify-between px-4 py-3 bg-white/10 rounded-xl"
                   >
                     <div className="flex items-center gap-2">
-                      <img
-                        src="/images/avatar.png"
-                        alt="avatar"
-                        className="object-contain w-8 h-8 rounded-full"
-                      />
+                    
                       <div>
                         <p className="text-sm font-medium">
                           {item.first_name} {item.last_name}
@@ -184,7 +159,7 @@ export default function Friends() {
                     </div>
                     <div className="flex items-center gap-2">
                       <img
-                        src="/images/coin.png"
+                        src="/images/logo/2.png"
                         alt="coin"
                         className="object-contain w-5 h-5"
                       />

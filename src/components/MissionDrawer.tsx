@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Drawer, { DrawerProps } from "./ui/drawer";
 import { toast } from "react-toastify";
-import { Mission } from "@/types/MissionType";
 import { NavLink , useNavigate } from "react-router-dom";
 import axios from "axios";
 const token = localStorage.getItem("token");
@@ -9,30 +8,31 @@ export default function MissionDrawer({
   mission,
   ...props
 }: DrawerProps & {
-  mission: Mission | null;
+  mission: any | null;
 }) {
-
   const [code , setcode] = useState("")
 const navigate = useNavigate()
   const submitCode = async () => {
-    if (code === mission.code) {
+    if (code === mission?.code) {
 
   
       try {
 
-        const res = await axios.put(
-          `${import.meta.env.VITE_API_URL}/api/clicker/missions/${mission.id}`,
-          { pass: 1 },
+        const res = await axios.post(
+          `${import.meta.env.VITE_API_URL}/api/clicker/offical_tasks/${mission.id}`,
+          { code: code },
           {
             headers: {
               Authorization: `Bearer ${token}`, // Add the token in the Authorization header
             },
           }
         );
-        setcode("")
-        setPopup(false)
-        navigate('/offical')
-        toast.success("Task Completed");
+        if(res.data ){
+          setcode("");
+          navigate('/offical');
+          window.location.reload();
+          toast.success("Task Completed");
+        }
       } catch (error) {
         console.error("Failed to update mission:", error);
         toast.error("Failed to update mission");
@@ -44,11 +44,11 @@ const navigate = useNavigate()
   };
   
 
-  if (!mission || mission.pass !== 0) return null;
+  if (!mission) return null;
   return (
     <Drawer {...props}   >
       <img
-        src={mission.image}
+        src={`${import.meta.env.VITE_API_URL}/${mission?.image}`}
         alt={mission.name}
         className="object-contain h-32 mx-auto"
       />
@@ -66,14 +66,14 @@ const navigate = useNavigate()
 
       <NavLink
 target="_blank"
-              className="px-10 bg-gray-300 text-black py-3 rounded mt-4 "
+              className="px-10 bg-gray-300 text-black py-3 rounded-[20px] mt-4 "
               to={mission.link}
               >
      Go ahead
     </NavLink>
       <button
       onClick={submitCode}
-        className="px-10 bg-green-800 outline-none border-none py-3 rounded mt-4 "
+        className="px-10 bg-green-800 outline-none border-none py-3 rounded-[20px] mt-4 "
         >
         {"Submit Code"}
       </button>

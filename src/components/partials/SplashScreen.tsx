@@ -21,7 +21,7 @@ const socialLinks = [
 ];
 
 const splashScreenImages = [
-  "/images/splash-screen/bg.png",
+  "/images/splash-screen/bg.PNG",
 ];
 
 export default function SplashScreen() {
@@ -32,11 +32,11 @@ export default function SplashScreen() {
       className="flex flex-col items-center justify-between pt-16 bg-cover bg-center w-full max-w-lg h-[--tg-viewport-height] mx-auto"
       style={{ backgroundImage: `url('${randomImage}')` }}
     >
-      <img src="/images/logo.png" alt="logo" className="h-48 max-w-full" />
+      <img src="/images/logo/logo.png" alt="logo" className="h-48 max-w-full" />
       <div className="flex flex-col items-center w-full">
         <div className="flex flex-col items-center w-full pb-6 bg-[url('/images/blur.png')] bg-cover bg-center">
           <h1 className="text-6xl font-medium text-center uppercase text-shadow">
-            THE Bonzee Coin
+            THE Boze Coin
           </h1>
           <img
             src="/images/loader.png"

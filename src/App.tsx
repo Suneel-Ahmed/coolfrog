@@ -53,7 +53,6 @@ function App() {
         setBearerToken(data.token);
         // setIsFirstLoad(data.first_login);
       }
-
       const data = await $http.$get<
         {
           user: UserType;
@@ -61,7 +60,6 @@ function App() {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } & Record<string, any>
       >("/clicker/sync");
-      console.log("data user" , data.user)
       useUserStore.setState({
         ...data.user,
       });
@@ -82,6 +80,10 @@ function App() {
     signIn().then(() => setShowSplashScreen(false));
   }, [user]);
 
+
+
+
+  
   if (!user || isDisktop) return <PlayOnYourMobile />;
 
   if (showSplashScreen) return <SplashScreen />;

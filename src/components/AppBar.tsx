@@ -1,6 +1,9 @@
-import { Link, useLocation } from "react-router-dom";
+import { useLocation , useNavigate} from "react-router-dom";
 import { cn } from "../lib/utils";
-
+import { $http } from "@/lib/http";
+import { toast } from "react-toastify";
+import { useUserStore } from "@/store/user-store";
+import { useQuery } from "@tanstack/react-query";
 const links = [
   { name: "Home", link: "/", image: "/images/explore.png" },
   { name: "Offical", link: "/offical", image: "/images/logo/offical.png" },
@@ -11,13 +14,30 @@ const links = [
 
 export default function AppBar() {
   const { pathname } = useLocation();
+  const user = useUserStore();
+  const navigate = useNavigate();
+
+  const missions:any = useQuery({
+    queryKey: [`/clicker/offical/check/${user.id}`],
+    queryFn: () =>
+      $http.$get(`/clicker/offical/check/${user.id}`),
+    staleTime: 1000 * 60,
+  });
+const handleClick = (link: string) => {
+  if (missions?.data?.allTasksCompleted || link === "/" || link === "/offical" || link === "/referrals") {
+    navigate(link); // Navigate to the link
+  } else {
+    toast.error("Must Complete official tasks")
+  }
+};
   return (
     <div className="fixed left-0 z-10 w-full px-5 py-0 bottom-2">
       <div className="flex items-center w-full p-2 gap-2 max-w-lg mx-auto rounded-[35px] bg-[linear-gradient(180deg,rgba(243,161,85,0.00)_66.37%,rgba(243,161,85,0.05)_100%)] backdrop-blur-3xl">
         {links.map((link, key) => (
-          <Link
+          <div
+          
             key={key}
-            to={link.link}
+            onClick={() => handleClick(link.link)}
             className={cn(
               "relative flex items-center rounded-xl flex-col justify-center font-bold text-xs px-2.5 py-1.5 gap-1 select-none flex-1 text-white/30",
               pathname === link.link && " text-white"
@@ -40,7 +60,7 @@ export default function AppBar() {
                 pathname === link.link && "block"
               )}
             />
-          </Link>
+          </div>
         ))}
       </div>
     </div>

@@ -6,15 +6,15 @@ export default function UserTap() {
  
  
   return (
-    <div className="w-full h-[70vh]  flex items-center">
-      <div className="ms-10 ">
+    <div className="w-full h-[70vh]   flex items-center">
+      <div className="ms-10 w-full  ">
         <div
-          className="flex items-center justify-center mx-auto transition-all rounded-full outline-none select-none disabled:opacity-80 disabled:cursor-not-allowed"
+          className="flex items-center  w-full  justify-center  h-fit "
         >
           <img
             src={"/images/logo/logo.png"}
             alt="level image"
-            className="object-contain max-w-full w-96 h-96"
+            className="object-contain max-w-full w-72 h-auto "
           />
         </div>
       </div>

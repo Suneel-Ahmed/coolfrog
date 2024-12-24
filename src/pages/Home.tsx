@@ -1,33 +1,39 @@
-import { useState } from "react";
+// import { useState } from "react";
 import UserTap from "../components/UserTap";
 import { useUserStore } from "../store/user-store";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import { $http } from "@/lib/http";
 import { useQuery } from "@tanstack/react-query";
-import { Mission } from "@/types/MissionType";
+// import { Mission } from "@/types/MissionType";
 // import levelConfig from "@/config/level-config";
 import { uesStore } from "@/store";
 export default function Home() {
   const user = useUserStore();
   const { missionTypes } = uesStore();
-  const [activeType, setActiveType] = useState(missionTypes?.[0]);
-  const missions = useQuery({
-    queryKey: ["/clicker/missions", activeType?.id],
+  const activeType : any = missionTypes?.[0];
+  const missions : any  = useQuery({
+    queryKey: ["/clicker/offical_tasks"],
     queryFn: () =>
-      $http.$get<Mission[]>(`/clicker/missions`, {
-        params: { type: activeType?.id },
-      }),
+      $http.$get<any[]>(`/clicker/offical_tasks`),
     staleTime: 0,
     enabled: !!activeType?.id,
   });
 
-  
+  const completedTasks : any  = useQuery({
+    queryKey: [`/clicker/offical_tasks/status/${user.id}`],
+    queryFn: () =>
+      $http.$get<any[]>(`/clicker/offical_tasks/status/${user.id}`),
+    staleTime: 0,
+    enabled: !!activeType?.id,
+  });
 
   return (
     <div
-      className="flex-1 px-5 pb-20 bg-center modal-body"
+      className="flex-1 relative px-5 pb-20 bg-[url('/images/bg.png')]  bg-cover bg-center "
      
     >
+      <div className="absolute inset-0 bg-black/70"></div>
+      <div className=" relative z-20 bg-model" >
       <header className="flex items-center justify-between mt-4">
         <div className="flex items-center gap-2 px-3 py-2 border-2 rounded-full bg-black/20 border-white/10">
           <img
@@ -59,12 +65,13 @@ export default function Home() {
             <span>{"Season 1"}</span>
           </div>
           {
-          missions?.data?.length >= 0  
+            missions &&
+          missions?.data?.missions.length >= 0  
          &&
           <div className="flex items-center space-x-1">
             <span className="text-xs">Tasks</span>
             <span className="font-bold">
-              {missions?.data?.filter(val=>val.pass === 1).length}/ {missions?.data?.length}
+              {completedTasks?.data?.length} / {missions?.data?.missions.length}
             </span>
           </div>
           }
@@ -74,16 +81,13 @@ export default function Home() {
           <div
             className="bg-[linear-gradient(180deg,#FBEDE0_0%,#F7B87D_21%,#F3A155_52%,#E6824B_84%,#D36224_100%)] h-full"
             style={{
-              width: `${(missions?.data?.filter(val=>val.pass === 1).length / missions?.data?.length) * 100}%`,
+              width: `${(completedTasks?.data?.length / missions?.data?.missions.length) * 100}%`,
             }}
           ></div>
         </div>
       </div>
-      <div className="bg-red-600  " >
-
-      
-                </div>
       <UserTap />
+      </div>
     </div>
   );
 }

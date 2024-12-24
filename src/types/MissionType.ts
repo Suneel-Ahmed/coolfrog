@@ -1,6 +1,7 @@
 export type MissionType = {
   id: number;
   name: string;
+  code : string;
 };
 
 export type MissionLevel = {
@@ -12,10 +13,7 @@ export type MissionLevel = {
 
 export type Mission = {
   id: number;
-  name: string;
-  image: string;
-  production_per_hour: string | null;
-  next_level?: MissionLevel;
-  required_user_level?: number;
-  required_friends_invitation?: number;
+  title: string;
+  logo: string;
+  
 };
