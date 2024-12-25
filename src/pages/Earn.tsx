@@ -1,4 +1,4 @@
-import { ReferralTaskType, TaskType } from "@/types/TaskType";
+import { ReferralTaskType } from "@/types/TaskType";
 import { useMemo, useState } from "react";
 import TaskDrawer from "@/components/TaskDrawer";
 import ListItem from "@/components/ListItem";
@@ -13,7 +13,7 @@ import ReferralTaskDrawer from "@/components/ReferralTaskDrawer";
 
 export default function Earn() {
   const { totalDailyRewards } = uesStore();
-  const [activeTask, setActiveTask] = useState<TaskType | null>(null);
+  const [activeTask, setActiveTask] = useState<any>(null);
   const [isTaskDrawerOpen, setIsTaskDrawerOpen] = useState(false);
   const [isDailyDrawerOpen, setIsDailyDrawerOpen] = useState(false);
   const [isReferralTaskDrawerOpen, setIsReferralTaskDrawerOpen] =
@@ -42,6 +42,7 @@ export default function Earn() {
     [data]
   );
 
+  console.log(otherTasks)
   // if (isLoading) return <LoadingPage />;
 
   return (

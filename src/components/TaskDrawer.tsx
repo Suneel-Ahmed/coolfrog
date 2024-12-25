@@ -1,5 +1,4 @@
-// import { useState } from "react";
-import { TaskType } from "../types/TaskType";
+import { useState } from "react";
 import { Button } from "./ui/button";
 import Drawer, { DrawerProps } from "./ui/drawer";
 import Price from "./Price";
@@ -14,21 +13,25 @@ export default function TaskDrawer({
   task,
   ...props
 }: DrawerProps & {
-  task: TaskType | null;
+  task: any | null;
 }) {
+  const [submited , setSubmited] = useState(true)
   const queryClient = useQueryClient();
-
+  const user = useUserStore();
   const submitMutation = useMutation({
-    mutationFn: () =>
-      $http.post<{ message: string }>(`/clicker/tasks/${task?.id}`),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    mutationFn: () => 
+      $http.post<{ message: string }>('/clicker/telegram-user-tasks/submit', {
+        telegram_user_id: user.id,  // Pass the user ID
+        task_id: task?.id,  // Pass the task ID
+        code: task?.code ||  null,  // Optional, if task type is 'code'
+      }),
     onSuccess: (response) => {
       toast.success(response?.data?.message || "Task submitted successfully");
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       task!.is_submitted = true;
+      setSubmited(false);
       task!.submitted_at = new Date().toISOString();
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {
       toast.error(error?.response?.data?.message || "An error occurred");
     },
@@ -37,17 +40,15 @@ export default function TaskDrawer({
   const claimMutation = useMutation({
     mutationFn: () =>
       $http.post<{ message: string }>(`/clicker/tasks/${task?.id}/claim`),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onSuccess: (response) => {
-      toast.success(response?.data?.message || "Task submitted successfully");
+      toast.success(response?.data?.message || "Reward claimed successfully");
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       task!.is_rewarded = true;
       useUserStore.setState((state) => {
-        state.balance += task!.reward_coins;
+        state.balance += task!.reward_coins;  // Add reward coins to the user's balance
         return state;
       });
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {
       toast.error(error?.response?.data?.message || "An error occurred");
     },
@@ -71,13 +72,7 @@ export default function TaskDrawer({
           className="justify-center text-xl"
         />
       </div>
-      {task.is_submitted &&
-        dayjs().isBefore(dayjs(task.submitted_at).add(60, "m")) && (
-          <p className="mt-6 text-center text-white/80">
-            Task submitted! Please Wait 1 hour for the moderation check to claim
-            the prize.
-          </p>
-        )}
+     
       <Button
         className="w-full rounded-[20px] mt-12"
         asChild
@@ -91,11 +86,7 @@ export default function TaskDrawer({
       {!task.is_rewarded && (
         <Button
           className="w-full rounded-[20px] mt-6"
-          disabled={
-            claimMutation.isPending ||
-            !task.is_submitted ||
-            dayjs().isBefore(dayjs(task.submitted_at).add(60, "m"))
-          }
+        disabled = {submited}
           onClick={() => claimMutation.mutate()}
         >
           {claimMutation.isPending && (
