@@ -5,7 +5,6 @@ import Price from "./Price";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { $http } from "@/lib/http";
 import { toast } from "react-toastify";
-import dayjs from "dayjs";
 import { Loader2Icon } from "lucide-react";
 import { useUserStore } from "@/store/user-store";
 

@@ -38,7 +38,6 @@ export default function Tasks() {
     enabled: !!activeType?.id,
   });
 
-  console.log("officalTasks" , missions , completedTasks)
 
 const handleShowMore = ()=>{
   setVisibleCount(visibleCount + 1)
@@ -51,19 +50,29 @@ const handleShowMore = ()=>{
     <div className="mt-10">
           <div className="flex gap-4">
             
-              <h3
-                className={"text-xs font-bold uppercase"}
-              
-              >
-                Must Complete
-              </h3>
+          {missions?.data &&
+  missions?.data?.missions?.some(
+    (mission: any) =>
+      !completedTasks?.data?.some(
+        (item: any) => item.task_id === mission.id && item.user_id === user.id
+      )
+  ) && (
+    <h3 className="text-xs font-bold uppercase">
+      Must Complete
+    </h3>
+  )}
             
           </div>
           <div className="mt-6">
             <div className="grid grid-cols-1 gap-3">
               {
                 missions?.data &&
-                missions?.data?.missions?.map((mission : any, key : number) => (
+                missions?.data?.missions?.filter((mission: any) => 
+                  !completedTasks?.data?.some(
+                    (item: any) => item.task_id === mission.id && item.user_id === user.id
+                  )
+                )
+                ?.map((mission : any, key : number) => (
                   <div
                     key={key}
                     className={
@@ -96,18 +105,7 @@ const handleShowMore = ()=>{
                       
                       </div>
                         </div>
-                        <div className="ms-auto">
-            {
-              completedTasks?.data?.some(
-                (item: any) =>
-                  item.task_id === mission.id && item.user_id === user.id
-              ) ? (
-                <FaCheck className="text-green-400" />
-              ) : (
-                <FaXmark className="text-red-400" />
-              )
-            }
-          </div>
+               
                     </div>
                    
                   </div>

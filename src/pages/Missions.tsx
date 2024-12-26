@@ -46,8 +46,8 @@ export default function Missions() {
           <div className="mt-6">
             <div className="grid grid-cols-2 gap-3">
               {
-                missions.data &&
-                missions.data?.map((mission : any, key : number) => (
+                missions?.data &&
+                missions?.data?.map((mission : any, key : number) => (
                   <div
                     key={key}
                     className={cn(
