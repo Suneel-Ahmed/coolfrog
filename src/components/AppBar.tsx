@@ -31,7 +31,7 @@ const handleClick = (link: string) => {
   }
 };
   return (
-    <div className="fixed left-0 z-10 w-full px-5 py-0 bottom-2">
+    <div className="fixed left-0 z-[9999999] w-full px-5 py-0 bottom-2">
       <div className="flex items-center w-full p-2 gap-2 max-w-lg mx-auto rounded-[35px] bg-[linear-gradient(180deg,rgba(243,161,85,0.00)_66.37%,rgba(243,161,85,0.05)_100%)] backdrop-blur-3xl">
         {links.map((link, key) => (
           <div

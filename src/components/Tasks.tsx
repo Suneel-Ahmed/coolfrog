@@ -7,7 +7,6 @@ import { useUserStore } from "@/store/user-store";
 import { useQuery } from "@tanstack/react-query";
 // import { Loader2Icon } from "lucide-react";
 import { useState } from "react";
-import { FaCheck , FaXmark  } from "react-icons/fa6";
 // interface MissionsData {
 //   missions: [];
 // }

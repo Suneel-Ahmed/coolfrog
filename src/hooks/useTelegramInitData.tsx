@@ -6,7 +6,15 @@ import { TelegramWebApps } from "telegram-webapps-types";
  * const { hash } = useTelegramInitData();
  * console.log({ hash });
  */
-
+const fakeData = {
+  user: {
+    id: 8022084831,
+    first_name: "ahaha",
+    last_name: "ahaha",
+    usernames: "",
+  },
+  start_param: "ref",
+} as TelegramWebApps.WebAppInitData;
 
 function useTelegramInitData() {
   const [data, setData] = useState<any>({});
@@ -25,7 +33,7 @@ function useTelegramInitData() {
       }
     }
 
-    setData( initData    );
+    setData( initData ?  fakeData : initData   );
   }, []);
 
   return data;
