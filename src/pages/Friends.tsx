@@ -21,9 +21,9 @@ export default function Friends() {
   const { referral, levels } = uesStore();
 
   const [showMoreBonuses, setShowMoreBonuses] = useState(false);
-
+  
   const referralLink = useMemo(
-    () => `https://t.me/BozeCoinBot/?startapp=ref${telegram_id}`,
+    () => `https://t.me/BozeCoinBot/bozecoin?startapp=${telegram_id}`,
     [telegram_id]
   );
 
@@ -33,7 +33,7 @@ export default function Friends() {
   });
 
   return (
-    <div className="flex flex-col justify-end bg-[url('/images/bg.png')] bg-cover flex-1">
+    <div className="flex flex-col justify-end bg-[url('/images/bg.png')]  min-h-fit bg-cover flex-1">
       <div className="flex flex-col flex-1 w-full h-full px-6 py-8 pb-24 mt-12 modal-body">
         <h1 className="text-2xl font-bold text-center uppercase">Friends</h1>
         <p className="mt-2.5 font-medium text-center">
@@ -181,16 +181,17 @@ export default function Friends() {
         </div>
         <div className="flex gap-3 mt-4">
           <Button
-            className="flex-shrink-0"
+          
+            className="flex-shrink-0 bg-none border border-gray-600 "
             onClick={() => {
               copy(referralLink);
               toast.success("Referral link copied to clipboard");
             }}
           >
-            <CopyIcon className="w-5 h-5" />
+            <CopyIcon className="w-5 h-5 text-white" />
           </Button>
           <Button
-            className="flex-1"
+            className="flex-1 bg-none border border-gray-600 text-white font-light"
             onClick={() =>
               Telegram.WebApp.openTelegramLink(
                 `https://t.me/share/url?text=${shareMessage}&url=${referralLink}`

@@ -28,7 +28,7 @@ export default function ListItem({
     >
       {image && (
         <img
-          src={image}
+        src={image}
           alt={title}
           className="object-contain w-9 h-9 mix-blend-screen"
         />

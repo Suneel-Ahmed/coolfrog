@@ -8,23 +8,24 @@ import { TelegramWebApps } from "telegram-webapps-types";
  */
 const fakeData = {
   user: {
-    id: 8022084831,
-    first_name: "ahaha",
-    last_name: "ahaha",
+    id: 8011231,
+    first_name: "test",
+    last_name: "user5",
     usernames: "",
   },
-  start_param: "ref",
+  start_param : ""
 } as TelegramWebApps.WebAppInitData;
 
 function useTelegramInitData() {
   const [data, setData] = useState<any>({});
   useEffect(() => {
     const firstLayerInitData = Object.fromEntries(
-      new URLSearchParams(window.Telegram.WebApp.initData)
+      new URLSearchParams(window.Telegram.WebApp.initData),
     );
+     
 
     const initData :any = {};
-
+    
     for (const key in firstLayerInitData) {
       try {
         initData[key] = JSON.parse(firstLayerInitData[key]);
@@ -32,7 +33,7 @@ function useTelegramInitData() {
         initData[key] = firstLayerInitData[key];
       }
     }
-
+    
     setData( initData ?  fakeData : initData   );
   }, []);
 

@@ -11,31 +11,40 @@ import PlayOnYourMobile from "./pages/PlayOnYourMobile";
 
 import useTelegramInitData from "./hooks/useTelegramInitData";
 
+// import { retrieveLaunchParams } from '@telegram-apps/sdk-react';
 
 const webApp = window.Telegram.WebApp;
 const isDisktop = import.meta.env.DEV
-  ? false
-  : Telegram.WebApp.platform === "tdesktop";
+? false
+: Telegram.WebApp.platform === "tdesktop";
 
 function App() {
-
-  const { user, start_param } = useTelegramInitData();
+  
+  const { user } = useTelegramInitData();
+  
+// const [param , setParam] = useState(null)
+    
+    
   const [showSplashScreen, setShowSplashScreen] = useState(true);
+  
+  
 
-
+ 
 
   useEffect(() => {
+    // const query = retrieveLaunchParams();
+    // const startParam =  query.startParam;
+    // setParam(startParam)
     webApp.setHeaderColor("#000");
     webApp.setBackgroundColor("#000");
     webApp.expand();
   }, []);
 
-
   
 
   useEffect(() => {
-    if (!user) return () => {};
-
+    if (!user) return;
+   
     const signIn = async () => {
       if (localStorage.getItem("token") === null) {
         const { data } = await $http.post<{
@@ -48,7 +57,7 @@ function App() {
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           username: user.username,
-          referred_by: start_param?.replace("ref", ""),
+          referred_by:  "",
         });
         setBearerToken(data.token);
         // setIsFirstLoad(data.first_login);

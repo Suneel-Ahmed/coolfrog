@@ -23,7 +23,7 @@ export default function DailyDrawer({ ...props }: DrawerProps) {
         `/clicker/claim-daily-task`
       ),
     onSuccess: (response) => {
-      toast.success(response.data.message);
+      toast.success(response.data.message, { autoClose: 1000 });
       dailyTasks.refetch();
       useUserStore.setState({
         balance: response.data.balance,
@@ -32,12 +32,12 @@ export default function DailyDrawer({ ...props }: DrawerProps) {
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {
-      toast.error(error.response?.data?.message || "Something went wrong");
+      toast.error(error.response?.data?.message || "Something went wrong", { autoClose: 1000 });
     },
   });
   return (
     <Drawer {...props}>
-      <img src="/images/coins.png" alt="coins-3" className="mx-auto h-28" />
+      <img src="/images/logo/logo.png" alt="coins-3" className="mx-auto h-28" />
       <h2 className="mt-6 text-2xl font-bold text-center">Daily Reward</h2>
       <p className="mt-2.5 text-center font-medium">
         Acquire coins for logging into the game daily without skipping
@@ -54,7 +54,7 @@ export default function DailyDrawer({ ...props }: DrawerProps) {
           >
             <p className="text-sm font-medium">{item.name}</p>
             <img
-              src="/images/coin.png"
+              src="/images/logo/2.png"
               alt="coin"
               className="object-contain w-5 h-5"
             />
@@ -70,7 +70,7 @@ export default function DailyDrawer({ ...props }: DrawerProps) {
         ))}
       </div>
       <Button
-        className="w-full rounded-[20px] mt-6"
+        className="w-full rounded-xl mt-6"
         disabled={
           !dailyTasks.data?.some((item) => item.available && !item.completed) ||
           claimTaskMutation.isPending ||

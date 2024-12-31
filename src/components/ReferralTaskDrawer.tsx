@@ -25,7 +25,7 @@ export default function ReferralTaskDrawer({
       ),
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onSuccess: (response) => {
-      toast.success(response?.data?.message || "Task submitted successfully");
+      toast.success(response?.data?.message || "Task submitted successfully", { autoClose: 1000 });
       queryClient.invalidateQueries({ queryKey: ["referral-tasks"] });
       task!.is_completed = true;
       useUserStore.setState((state) => {
@@ -36,7 +36,7 @@ export default function ReferralTaskDrawer({
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message || "An error occurred");
+      toast.error(error?.response?.data?.message || "An error occurred", { autoClose: 1000 });
     },
   });
 
@@ -57,7 +57,7 @@ export default function ReferralTaskDrawer({
       </div>
 
       <Button
-        className="w-full rounded-[20px] mt-6"
+        className="w-full rounded-xl mt-6"
         disabled={
           claimMutation.isPending ||
           !!task.is_completed ||

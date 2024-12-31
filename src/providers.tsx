@@ -26,6 +26,7 @@ export default function Providers({ children }: PropsWithChildren) {
         theme="dark"
         position="top-center"
         hideProgressBar
+        className = "z-[9999999999999999]"
         stacked
       />
     </QueryClientProvider>

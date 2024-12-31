@@ -2,10 +2,11 @@ import { useState } from "react";
 import Drawer, { DrawerProps } from "./ui/drawer";
 import { toast } from "react-toastify";
 import { Mission } from "@/types/MissionType";
-import { useUserStore } from "../store/user-store";
+// import { NavLink , useNavigate } from "react-router-dom";
+import { Button } from "./ui/button";
 import axios from "axios";
 const token = localStorage.getItem("token");
-import { Button } from "./ui/button";
+
 
 
 export default function ExchangeDrawer({
@@ -15,10 +16,9 @@ export default function ExchangeDrawer({
   ...props
 }: DrawerProps & {
   mission: Mission | null;
-  changeDATA : any;
-  setChangeDATA : any;
+  changeDATA :any ;
+  setChangeDATA : any
 }) {
-  const user : any = useUserStore();
 
   const [accountHolder , setAccountHolder] = useState("")
   const [accountNumber , setAccountNumber] = useState("")
@@ -29,19 +29,11 @@ export default function ExchangeDrawer({
   const handleSubmit = async ()=>{
     try {
       if(accountHolder && accountNumber){
-       
-        if(user?.payment_verified === 1) {
-          return toast.success('You Already Integrated Payment Method', { autoClose: 1000 })
-        }
-       
-        const res = await axios.post(
-          `${import.meta.env.VITE_API_URL}/api/clicker/payment-methods`,
+        const res = await axios.put(
+          `${import.meta.env.VITE_API_URL}/api/clicker/payment-methods/${mission.id}`,
           { 
-            user_id : user.id,
-            method : mission?.title,
             account_holder_name : accountHolder,
             account_number : accountNumber
-
            },
           {
             headers: {
@@ -50,23 +42,25 @@ export default function ExchangeDrawer({
           }
         );
 if(res.data){
-  toast.success('Payment Method Integrated', { autoClose: 1000 })
+  toast.success('Payment Method Updated', { autoClose: 1000 })
   setAccountNumber("");
   setAccountHolder("");
   setChangeDATA(!changeDATA);
+  (props.onOpenChange as (value: boolean) => void)(false);
 }
       }else{
         toast.error('please fill the fields', { autoClose: 1000 })
         setAccountNumber("");
         setAccountHolder("");
         setChangeDATA(!changeDATA);
+        (props.onOpenChange as (value: boolean) => void)(false);
       }
       
     } catch (error) {
       console.log(error)
-      setChangeDATA(!changeDATA);
       setAccountNumber("");
       setAccountHolder("");
+      setChangeDATA(!changeDATA);
     }
   }
 
@@ -81,7 +75,7 @@ if(res.data){
       />
       <h2 className="mt-6 text-2xl font-medium text-center">{mission?.title}</h2>
       <div className="flex flex-col mx-auto  mt-4 w-fit">
-        <p className="text-xs text-center">Add Your Account Number</p>
+        <p className="text-xs text-center">Update Your Account</p>
       </div>
 
 
@@ -94,13 +88,13 @@ if(res.data){
       
       
       <div className="w-full gap-5 flex justify-center" >
-    
       <Button
           className="w-full rounded-xl mt-6"
           onClick={handleSubmit}
         >
          {"Submit"}
         </Button>
+    
         </div>
       
     </Drawer>

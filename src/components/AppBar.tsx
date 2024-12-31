@@ -23,16 +23,17 @@ export default function AppBar() {
       $http.$get(`/clicker/offical/check/${user.id}`),
     staleTime: 1000 * 60,
   });
+  console.log("dasd" , missions?.data?.allTasksCompleted)
 const handleClick = (link: string) => {
   if (missions?.data?.allTasksCompleted || link === "/" || link === "/offical" || link === "/referrals") {
     navigate(link); // Navigate to the link
   } else {
-    toast.error("Must Complete official tasks")
+    toast.error("Must Complete official tasks", { autoClose: 1000 });
   }
 };
   return (
     <div className="fixed left-0 z-[9999999] w-full px-5 py-0 bottom-2">
-      <div className="flex items-center w-full p-2 gap-2 max-w-lg mx-auto rounded-[35px] bg-[linear-gradient(180deg,rgba(243,161,85,0.00)_66.37%,rgba(243,161,85,0.05)_100%)] backdrop-blur-3xl">
+      <div className="flex items-center w-full p-2 gap-2 max-w-lg mx-auto rounded-xl bg-[linear-gradient(180deg,rgba(243,161,85,0.00)_66.37%,rgba(243,161,85,0.05)_100%)] backdrop-blur-3xl">
         {links.map((link, key) => (
           <div
           

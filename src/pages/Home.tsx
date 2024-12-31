@@ -29,7 +29,7 @@ export default function Home() {
 
   return (
     <div
-      className="flex-1 relative px-5 pb-20 bg-[url('/images/bg.png')]  bg-cover bg-postion "
+      className="flex-1 relative px-5 pb-20 bg-[url('/images/bg.png')] h-full overflow-y-hidden  bg-cover bg-postion "
      
     >
       <div className="absolute inset-0 bg-black/70"></div>

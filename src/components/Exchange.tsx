@@ -1,20 +1,25 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useUserStore } from "@/store/user-store";
 // import { Mission } from "@/types/MissionType";
-import { useState } from "react";
+import { useState , useEffect } from "react";
 import {WalletData} from '@/data/data'
 import { toast } from "react-toastify";
 import ExchangeDrawer from "./ExchangeDrawer";
 import { $http } from "@/lib/http";
 import { useQuery } from "@tanstack/react-query";
+import UpdateExchangeDrawer from '@/components/UpdateExchangeDrawer';
+
 const token = localStorage.getItem("token");
+
+
 export default function Exchange() {
   const user : any = useUserStore();
   const [openDrawer, setOpenDrawer] = useState(false);
+  const [updatedDrawer, setUpdatedDrawer] = useState(false);
   const [selectedMission, setSelectedMission] = useState<any>(null);
- 
-
-  const paymentStatus : any  = useQuery({
+ const [changeDATA , setChangeDATA] = useState(false)
+  
+ const { data: paymentStatus, refetch: refetchPaymentStatus }  : any  = useQuery({
     queryKey: ["/clicker/payment-method/lock_status"],
     queryFn: () =>
       $http.$get<any[]>(`/clicker/payment-method/lock_status`, {
@@ -22,10 +27,33 @@ export default function Exchange() {
           Authorization: `Bearer ${token}`, // Add your token here
         },
       }),
-    staleTime: 0,
+    staleTime: Infinity,
 
   });
 
+
+  const { data: paymentGet, refetch: refetchPaymentGet }  : any  = useQuery({
+    queryKey: [`/clicker/payment-methods/${user.id}`],
+    queryFn: () =>
+      $http.$get<any[]>(`/clicker/payment-methods/${user.id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Add your token here
+        },
+      }),
+    staleTime: Infinity,
+
+  });
+
+ 
+  useEffect(() => {
+    if (changeDATA) {
+      // Refetch both queries
+      Promise.all([refetchPaymentGet(), refetchPaymentStatus()]).then(() => {
+        // Reset missionChange after both refetches complete
+        setChangeDATA(false);
+      });
+    }
+  }, [changeDATA, refetchPaymentGet, refetchPaymentStatus]);
 
   return (
     <>
@@ -35,56 +63,58 @@ export default function Exchange() {
          
           <div className="mt-6">
             <div className="grid grid-cols-1 gap-4">
-              {
-                WalletData?.data &&
-                WalletData?.data?.slice(0, 4).map((mission, key) => (
-                  <>
-                  {
-  paymentStatus?.data && paymentStatus?.data[0]?.locked === 0 ? (
-    mission?.title === 'easypaisa' || mission?.title === 'Jazzcash' ? null : (
-                 
-                  <div
-                    key={key}
-                    className={
-                      "flex flex-col  py-3 px-3  bg-[#D9D9D9]/10 rounded-xl cursor-pointer"}
-                    onClick={() => {
-                      setSelectedMission(mission);
-                    if(user?.payment_verified === 1){
-                      setOpenDrawer(false);
-                      toast.success('Payment Method Integrated')
+            {
+  WalletData?.data &&
+  WalletData?.data
+    ?.filter((mission) => {
+      // Exclude 'Easypaisa' and 'Jazzcash' if paymentStatus?.data[0]?.locked === 0
+      if ( paymentStatus && paymentStatus[0]?.locked === 0) {
+        return mission?.title !== 'Easypaisa' && mission?.title !== 'Jazzcash';
+      }
+      // Include all missions otherwise
+      return true;
+    })
+    ?.slice(0, 4)
+    ?.map((mission, key) => (
+      <div
+        key={key}
+        className="flex flex-col py-3 px-3 bg-[#D9D9D9]/10 rounded-xl cursor-pointer"
+        onClick={() => {
+          if (user?.payment_verified === 1 && paymentGet && paymentGet[0]?.method === mission?.title ) {
+            setSelectedMission({id : paymentGet && paymentGet[0]?.id ,   logo : mission.logo,
+              title : mission.title});
+            setUpdatedDrawer(true)
+            setOpenDrawer(false);
+          } else if(user?.payment_verified === 1 && paymentGet && paymentGet[0]?.method !== mission?.title) {
+            toast.success('Choose Your Previous Payment Method', { autoClose: 1000 });
+            setSelectedMission(mission);
+            setOpenDrawer(false);
+            setUpdatedDrawer(false)
+          }else{
+            setSelectedMission(mission);
+            setOpenDrawer(true);
 
-                    }else{
+          }
+        }}
+      >
+        <div className="flex items-center justify-between">
+          <div className="flex items-center flex-1 space-x-5">
+            <div className="w-[25%]">
+              <img
+                src={mission.logo}
+                alt={mission.title}
+                className="object-contain w-auto h-16"
+              />
+            </div>
+            <div className="flex w-[90%] mx-auto h-full">
+              <p className="text-[14px] font-bold">{mission.title}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    ))
+}
 
-                      setOpenDrawer(true);
-                    }
-                    }}
-                  >
-                    <div className="flex items-center justify-between ">
-                   
-                      <div className="flex items-center flex-1 space-x-5" >
-<div className="w-[25%]" >
-                      <img
-                        src={mission.logo}
-                        alt={mission.title}
-                        className="object-contain   w-auto h-16"
-                        />
-                        </div>
-                      <div className="flex w-[90%]    mx-auto  h-full ">
-                        <p className="text-[14px] font-bold"> {mission.title}</p>
-                        
-                      
-                      </div>
-                        </div>
-                      
-                    </div>
-                   
-                  </div>
-                     )
-                    ) : null
-                  }
-                  </>
-                ))
-              }
             </div>
 
           </div>
@@ -93,6 +123,15 @@ export default function Exchange() {
         open={openDrawer}
         onOpenChange={setOpenDrawer}
         mission={selectedMission}
+        changeDATA = {changeDATA}
+        setChangeDATA = {setChangeDATA}
+      />
+        <UpdateExchangeDrawer
+        open={updatedDrawer}
+        onOpenChange={setUpdatedDrawer}
+        mission={selectedMission}
+        changeDATA = {changeDATA}
+        setChangeDATA = {setChangeDATA}
       />
     </>
   );

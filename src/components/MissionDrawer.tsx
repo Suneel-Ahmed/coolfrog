@@ -3,24 +3,28 @@ import Drawer, { DrawerProps } from "./ui/drawer";
 import { toast } from "react-toastify";
 import { NavLink , useNavigate } from "react-router-dom";
 import axios from "axios";
+// import { useUserStore } from "../store/user-store";
 const token = localStorage.getItem("token");
 export default function MissionDrawer({
   mission,
+  setMissionChange,
+  missionChange ,
   ...props
 }: DrawerProps & {
   mission: any | null;
+  setMissionChange: any;
+  missionChange : boolean;
 }) {
-  const [code , setcode] = useState("")
+  // const user = useUserStore();
 const navigate = useNavigate()
-  const submitCode = async () => {
-    if (code === mission?.code) {
+const [btn , setBtn] = useState(false)
 
-  
+  const submitCode = async () => {
+    setBtn(false)
       try {
 
-        const res = await axios.post(
+        const res = await axios.get(
           `${import.meta.env.VITE_API_URL}/api/clicker/offical_tasks/${mission.id}`,
-          { code: code },
           {
             headers: {
               Authorization: `Bearer ${token}`, // Add the token in the Authorization header
@@ -28,54 +32,45 @@ const navigate = useNavigate()
           }
         );
         if(res.data ){
-          setcode("");
+         
           navigate('/offical');
-          window.location.reload();
-          toast.success("Task Completed");
+          setMissionChange(!missionChange)
+          toast.success("Task Completed", { autoClose: 1000 });
+          (props.onOpenChange as (value: boolean) => void)(false);
         }
       } catch (error) {
         console.error("Failed to update mission:", error);
-        toast.error("Failed to update mission");
+        toast.error("Failed to update mission", { autoClose: 1000 });
       }
-    } else {
-      setcode("");
-      toast.error("Invalid Code");
-    }
+    
   };
   
 
   if (!mission) return null;
   return (
-    <Drawer {...props}   >
+    <Drawer {...props}  >
       <img
         src={`${import.meta.env.VITE_API_URL}/${mission?.image}`}
         alt={mission.name}
-        className="object-contain h-32 mx-auto"
+        className="object-contain h-28 mt-24  mx-auto"
       />
       <h2 className="mt-6 text-2xl font-medium text-center">{mission.name}</h2>
-      <div className="flex flex-col mx-auto  mt-4 w-fit">
-        <p className="text-xs text-center">Watch video and write the given code below</p>
-      </div>
-
-      <div className="flex items-center justify-center mx-auto mt-6 gap-20 text-black">
-        <input onChange={(e)=>setcode(e.target.value)} value={code} type="text" placeholder="enter code" className="w-[300px] mx-auto px-3 py-2 rounded-[20px] bg-transparent text-white border " />
-      </div>
-      
-      
-      <div className="w-full gap-5 flex justify-center" >
+    <div className="w-full gap-5 mt-10 flex flex-col justify-center" >
 
       <NavLink
 target="_blank"
-              className="px-10 bg-gray-300 text-black py-3 rounded-[20px] mt-4 "
+onClick={()=>setBtn(true)}
+              className="px-5 bg-gray-300 text-nowrap text-center text-black py-3 h-fit rounded-xl mt-4 "
               to={mission.link}
               >
-     Go ahead
+     {mission.code}
     </NavLink>
       <button
+      disabled  = {!btn}
       onClick={submitCode}
-        className="px-10 bg-green-800 outline-none border-none py-3 rounded-[20px] mt-4 "
+        className={`px-5 ${btn ? "bg-gray-300" : "bg-gray-600"}  text-black outline-none text-nowrap border-none py-3 h-fit rounded-xl mt-4 `}
         >
-        {"Submit Code"}
+        { "Check"}
       </button>
         </div>
       

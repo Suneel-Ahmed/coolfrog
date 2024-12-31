@@ -13,7 +13,7 @@ export const WalletData = {
     {
         id : 3,
         logo : "images/wallet/easypaisa.png",
-        title : "easypaisa",
+        title : "Easypaisa",
     },
     {
         id : 4,

@@ -1,4 +1,4 @@
-import { useState } from "react";
+
 import { Button } from "./ui/button";
 import Drawer, { DrawerProps } from "./ui/drawer";
 import Price from "./Price";
@@ -14,51 +14,62 @@ export default function TaskDrawer({
 }: DrawerProps & {
   task: any | null;
 }) {
-  const [submited , setSubmited] = useState(true)
+ 
   const queryClient = useQueryClient();
   const user = useUserStore();
+
   const submitMutation = useMutation({
-    mutationFn: () => 
-      $http.post<{ message: string }>('/clicker/telegram-user-tasks/submit', {
-        telegram_user_id: user.id,  // Pass the user ID
-        task_id: task?.id,  // Pass the task ID
-        code: task?.code ||  null,  // Optional, if task type is 'code'
-      }),
+    mutationFn: () => {
+      return $http.post<{ message: string }>("/clicker/telegram-user-tasks/submit", {
+        telegram_user_id: user.id, // Pass the user ID
+        task_id: task?.id, // Pass the task ID
+        code: task?.code || null, // Optional, if task type is 'code'
+      });
+    },
     onSuccess: (response) => {
-      toast.success(response?.data?.message || "Task submitted successfully");
+      toast.success(response?.data?.message || "Task submitted successfully", { autoClose: 1000 });
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       task!.is_submitted = true;
-      setSubmited(false);
+     
       task!.submitted_at = new Date().toISOString();
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message || "An error occurred");
+      toast.error(error?.response?.data?.message || "An error occurred", { autoClose: 1000 });
+     
     },
   });
 
   const claimMutation = useMutation({
-    mutationFn: () =>
-      $http.post<{ message: string }>(`/clicker/tasks/${task?.id}/claim`),
+    mutationFn: () => {
+  
+      return $http.post<{ message: string }>(`/clicker/tasks/${task?.id}/claim/${user?.id}`);
+    },
     onSuccess: (response) => {
-      toast.success(response?.data?.message || "Reward claimed successfully");
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
-      task!.is_rewarded = true;
+      if (task) {
+        task.is_rewarded = true;
+      }
       useUserStore.setState((state) => {
-        state.balance += task!.reward_coins;  // Add reward coins to the user's balance
+        state.balance += task!.reward_coins; // Add reward coins to the user's balance
         return state;
       });
+      toast.success(response?.data?.message || "Reward claimed successfully", { autoClose: 1000 });
+    
+      props.onOpenChange?.(false);
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message || "An error occurred");
+      toast.error(error?.response?.data?.message || "An error occurred", { autoClose: 1000 });
+    
     },
   });
 
   if (!task) return null;
+
   return (
     <Drawer {...props}>
       <img
         src={
-          task.image ||
+          task?.image ? `${import.meta.env.VITE_API_URL}/${task?.image}` :
           (task.type === "video" ? "/images/youtube.png" : "/images/bounty.png")
         }
         alt={task.name}
@@ -66,26 +77,19 @@ export default function TaskDrawer({
       />
       <h2 className="text-2xl font-medium text-center mt-9">{task.name}</h2>
       <div className="px-5 py-2 mx-auto mt-4 border-2 border-dashed rounded-full border-primary w-fit">
-        <Price
-          amount={task.reward_coins.toLocaleString()}
-          className="justify-center text-xl"
-        />
+        <Price amount={task.reward_coins.toLocaleString()} className="justify-center text-xl" />
       </div>
-     
-      <Button
-        className="w-full rounded-[20px] mt-12"
-        asChild
-        onClick={() => submitMutation.mutate()}
-      >
-        <a href={task.link} target="_blank">
-          {task.action_name}
-        </a>
-      </Button>
-
-      {!task.is_rewarded && (
+  
+        <Button asChild className="w-full rounded-xl mt-10" onClick={() => submitMutation.mutate()}>
+          <a href={task.link} target="_blank">
+            {task.action_name}
+          </a>
+        </Button>
+      
+      {!task.is_rewarded  && (
         <Button
-          className="w-full rounded-[20px] mt-6"
-        disabled = {submited}
+          className="w-full rounded-xl mt-6"
+          disabled={!task.is_submitted}
           onClick={() => claimMutation.mutate()}
         >
           {claimMutation.isPending && (

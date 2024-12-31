@@ -5,25 +5,36 @@ import ListItem from "@/components/ListItem";
 import Price from "@/components/Price";
 import DailyDrawer from "@/components/DailyDrawer";
 import CheckIcon from "@/components/icons/CheckIcon";
+import CodeDrawer from "@/components/CodeDrawer";
 import { useQuery } from "@tanstack/react-query";
 import { $http } from "@/lib/http";
 import { cn } from "@/lib/utils";
-import { uesStore } from "@/store";
+import { useUserStore } from "@/store/user-store";
+
 import ReferralTaskDrawer from "@/components/ReferralTaskDrawer";
 
 export default function Earn() {
-  const { totalDailyRewards } = uesStore();
+  
+  const user = useUserStore();
   const [activeTask, setActiveTask] = useState<any>(null);
+  const [activeCodeTask, setActiveCodeTask] = useState<any>(null);
   const [isTaskDrawerOpen, setIsTaskDrawerOpen] = useState(false);
+  // const [isCodeDrawerOpen, setIsCodeDrawerOpen] = useState(false);
   const [isDailyDrawerOpen, setIsDailyDrawerOpen] = useState(false);
   const [isReferralTaskDrawerOpen, setIsReferralTaskDrawerOpen] =
     useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+const handleOpenModal = () => setIsModalOpen(true);
+const handleCloseModal = () => setIsModalOpen(false);
+
+
   const [activeReferralTask, setActiveReferralTask] =
     useState<ReferralTaskType | null>(null);
 
   const  data  = useQuery({
     queryKey: ["tasks"],
-    queryFn: () => $http.$get<any>("/clicker/tasks"),
+    queryFn: () => $http.$get<any>(`/clicker/tasks/${user.id}`),
   });
 
 
@@ -41,8 +52,12 @@ export default function Earn() {
     () => data?.data && data?.data?.data?.filter((task : any ) => task.type === "other") || [],
     [data]
   );
+  const verifyTasks : any = useMemo(
+    () => data?.data && data?.data?.data?.filter((task : any ) => task.type === "verify_code") || [],
+    [data]
+  );
 
-  console.log(otherTasks)
+ 
   // if (isLoading) return <LoadingPage />;
 
   return (
@@ -60,14 +75,14 @@ export default function Earn() {
           <>
             <p className="mt-2.5 font-medium text-center">Cool Frog YouTube</p>
             <div className="mt-4 space-y-2">
-              {videoTasks.map((item : any) => (
+              {videoTasks.sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()).map((item : any) => (
                 <ListItem
                   key={item.id}
                   title={item.name}
                   subtitle={
                     <Price amount={`+${item.reward_coins.toLocaleString()}`} />
                   }
-                  image={item.image || "/images/youtube.png"}
+                  image={ item?.image ? `${import.meta.env.VITE_API_URL}/${item?.image}` : "/images/youtube.png"}
                   onClick={() => {
                     setActiveTask(item);
                     setIsTaskDrawerOpen(true);
@@ -87,11 +102,6 @@ export default function Earn() {
         <div className="mt-4 space-y-2">
           <ListItem
             title={"Daily reward"}
-            subtitle={
-              <Price
-                amount={`+${Number(totalDailyRewards).toLocaleString()}`}
-              />
-            }
             image="/images/daily-task.png"
             onClick={() => setIsDailyDrawerOpen(true)}
           />
@@ -100,14 +110,15 @@ export default function Earn() {
           <>
             <p className="mt-8 font-medium text-center">All Tasks</p>
             <div className="mt-4 space-y-2">
-              {otherTasks.map((item : any) => (
+              {otherTasks.sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+              .map((item : any) => (
                 <ListItem
                   key={item.id}
                   title={item.name}
                   subtitle={
                     <Price amount={`+${item.reward_coins.toLocaleString()}`} />
                   }
-                  image={item.image || "/images/bounty.png"}
+                  image={ item?.image ? `${import.meta.env.VITE_API_URL}/${item?.image}` : "/images/bounty.png"}
                   className={cn(
                     "disabled:opacity-50 disabled:mix-blend-luminosity"
                   )}
@@ -126,6 +137,39 @@ export default function Earn() {
             </div>
           </>
         )}
+       {verifyTasks.length > 0 && (
+  <>
+    <p className="mt-8 font-medium text-center">All Tasks</p>
+    <div className="mt-4 space-y-2">
+      {verifyTasks
+        .sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+        .map((item: any) => (
+          <ListItem
+            key={item.id}
+            title={item.name}
+            subtitle={
+              <Price amount={`+${item.reward_coins.toLocaleString()}`} />
+            }
+            image={item?.image ? `${import.meta.env.VITE_API_URL}/${item?.image}` : "/images/bounty.png"}
+            className={cn(
+              "disabled:opacity-50 disabled:mix-blend-luminosity"
+            )}
+            disabled={item.is_rewarded}
+            action={
+              item.is_rewarded ? (
+                <CheckIcon className="w-6 h-6 text-[#27D46C]" />
+              ) : undefined
+            }
+            onClick={() => {
+              setActiveCodeTask(item);
+              handleOpenModal();
+            }}
+          />
+        ))}
+    </div>
+  </>
+)}
+
         {referralTasks.data && referralTasks.data?.length > 0 && (
           <>
             <p className="mt-8 font-medium text-center">Referral Tasks</p>
@@ -166,6 +210,14 @@ export default function Earn() {
         open={isTaskDrawerOpen}
         onOpenChange={setIsTaskDrawerOpen}
       />
+      {
+        isModalOpen && 
+      <CodeDrawer
+      task={activeCodeTask} 
+      onClose={handleCloseModal} 
+      
+      />
+    }
       <ReferralTaskDrawer
         task={activeReferralTask}
         open={isReferralTaskDrawerOpen}

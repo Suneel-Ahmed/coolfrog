@@ -3,13 +3,8 @@ import MissionDrawer from "@/components/MissionDrawer";
 import { $http } from "@/lib/http";
 import { uesStore } from "@/store";
 import { useUserStore } from "@/store/user-store";
-// import { Mission } from "@/types/MissionType";
 import { useQuery } from "@tanstack/react-query";
-// import { Loader2Icon } from "lucide-react";
-import { useState } from "react";
-// interface MissionsData {
-//   missions: [];
-// }
+import { useState ,  useEffect } from "react";
 
 export default function Tasks() {
   const user = useUserStore();
@@ -19,8 +14,9 @@ export default function Tasks() {
     const [openDrawer, setOpenDrawer] = useState(false);
   const [selectedMission, setSelectedMission] = useState(null);
   const [visibleCount, setVisibleCount] = useState(4);
+  const [missionChange , setMissionChange] = useState(false)
   
-  const missions:any = useQuery({
+  const { data: missions, refetch: refetchMissions }:any = useQuery({
     queryKey: ["/clicker/offical_tasks"],
     queryFn: () =>
       $http.$get(`/clicker/offical_tasks`),
@@ -29,7 +25,7 @@ export default function Tasks() {
 
 
   
-  const completedTasks : any  = useQuery({
+  const { data: completedTasks, refetch: refetchCompletedTasks } : any  = useQuery({
     queryKey: [`/clicker/offical_tasks/status/${user.id}`],
     queryFn: () =>
       $http.$get<any[]>(`/clicker/offical_tasks/status/${user.id}`),
@@ -42,6 +38,16 @@ const handleShowMore = ()=>{
   setVisibleCount(visibleCount + 1)
 }
 
+useEffect(() => {
+  if (missionChange) {
+    // Refetch both queries
+    Promise.all([refetchMissions(), refetchCompletedTasks()]).then(() => {
+      // Reset missionChange after both refetches complete
+      setMissionChange(false);
+    });
+  }
+}, [missionChange, refetchMissions, refetchCompletedTasks]);
+
   return (
     <>
     
@@ -49,10 +55,10 @@ const handleShowMore = ()=>{
     <div className="mt-10">
           <div className="flex gap-4">
             
-          {missions?.data &&
-  missions?.data?.missions?.some(
+          {missions?.missions &&
+  missions?.missions?.some(
     (mission: any) =>
-      !completedTasks?.data?.some(
+      !completedTasks?.some(
         (item: any) => item.task_id === mission.id && item.user_id === user.id
       )
   ) && (
@@ -65,9 +71,9 @@ const handleShowMore = ()=>{
           <div className="mt-6">
             <div className="grid grid-cols-1 gap-3">
               {
-                missions?.data &&
-                missions?.data?.missions?.filter((mission: any) => 
-                  !completedTasks?.data?.some(
+                missions?.missions &&
+                missions?.missions?.filter((mission: any) => 
+                  !completedTasks?.some(
                     (item: any) => item.task_id === mission.id && item.user_id === user.id
                   )
                 )
@@ -111,11 +117,17 @@ const handleShowMore = ()=>{
                 ))
               }
             </div>
-            {missions?.data?.missions && visibleCount < missions?.data?.missions?.length && ( // Show button if more items are available
+            {missions?.missions &&
+  visibleCount < missions?.missions?.some(
+    (mission: any) =>
+      !completedTasks?.some(
+        (item: any) => item.task_id === mission.id && item.user_id === user.id
+      )
+  ).length  && ( // Show button if more items are available
             <div className="text-center mt-4">
               <button
                 onClick={handleShowMore}
-                className="px-4 py-2 border rounded-[20px] hover:text-orange-500 hover:border-orange-500  text-white"
+                className="px-4 py-2 border rounded-xl hover:text-orange-500 hover:border-orange-500  text-white"
               >
                 Show More
               </button>
@@ -126,6 +138,8 @@ const handleShowMore = ()=>{
         <MissionDrawer
         open={openDrawer}
         onOpenChange={setOpenDrawer}
+        setMissionChange = {setMissionChange}
+        missionChange = {missionChange}
         mission={selectedMission}
       />
     </>

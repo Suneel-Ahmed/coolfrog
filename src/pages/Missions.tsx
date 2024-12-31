@@ -16,11 +16,12 @@ export default function Missions() {
       $http.$get(`/clicker/partners`),
     staleTime: 1000 * 60,
   });
+  console.log(missions)
 
-
+  
 
   return (
-    <div className="flex min-h-screen bg-[url('/images/bg.png')]  bg-cover bg-center flex-col justify-around  ">
+    <div className="flex min-h-fit h-screen bg-[url('/images/bg.png')]  bg-cover bg-center flex-col justify-around  ">
       
       <div className="flex flex-col flex-1 w-full h-screen px-6  modal-body">
         <div className="flex items-center justify-center mt-10 space-x-3 text-gradient">
@@ -57,7 +58,7 @@ export default function Missions() {
                   >
                     <div className="flex flex-col items-center  space-x-3">
                       <img
-                        src={`${import.meta.env.VITE_API_URL}/${mission.partner_img}`}
+                        src={`${import.meta.env.VITE_API_URL}/${mission?.partner_img}`}
                         alt={mission.partner_name}
                         className="object-contain w-28 h-auto"
                       />
