@@ -8,21 +8,20 @@ import { useState ,  useEffect } from "react";
 
 export default function Tasks() {
   const user = useUserStore();
-  // const { missionTypes, totalReferals } = uesStore();
-  const { missionTypes } = uesStore();
+
+  const { missionTypes  } : any = uesStore();
   const activeType : any = missionTypes?.[0];
     const [openDrawer, setOpenDrawer] = useState(false);
   const [selectedMission, setSelectedMission] = useState(null);
   const [visibleCount, setVisibleCount] = useState(4);
   const [missionChange , setMissionChange] = useState(false)
-  
+
   const { data: missions, refetch: refetchMissions }:any = useQuery({
     queryKey: ["/clicker/offical_tasks"],
     queryFn: () =>
       $http.$get(`/clicker/offical_tasks`),
     staleTime: 1000 * 60,
   });
-
 
   
   const { data: completedTasks, refetch: refetchCompletedTasks } : any  = useQuery({
@@ -44,6 +43,10 @@ useEffect(() => {
     Promise.all([refetchMissions(), refetchCompletedTasks()]).then(() => {
       // Reset missionChange after both refetches complete
       setMissionChange(false);
+      uesStore.setState({
+        officalTasks : false
+      })
+   
     });
   }
 }, [missionChange, refetchMissions, refetchCompletedTasks]);

@@ -7,7 +7,7 @@ import { $http } from "@/lib/http";
 import { toast } from "react-toastify";
 import { Loader2Icon } from "lucide-react";
 import { useUserStore } from "@/store/user-store";
-
+import { useState } from "react";
 export default function TaskDrawer({
   task,
   ...props
@@ -17,27 +17,8 @@ export default function TaskDrawer({
  
   const queryClient = useQueryClient();
   const user = useUserStore();
+const [active , setActive] = useState(false)
 
-  const submitMutation = useMutation({
-    mutationFn: () => {
-      return $http.post<{ message: string }>("/clicker/telegram-user-tasks/submit", {
-        telegram_user_id: user.id, // Pass the user ID
-        task_id: task?.id, // Pass the task ID
-        code: task?.code || null, // Optional, if task type is 'code'
-      });
-    },
-    onSuccess: (response) => {
-      toast.success(response?.data?.message || "Task submitted successfully", { autoClose: 1000 });
-      queryClient.invalidateQueries({ queryKey: ["tasks"] });
-      task!.is_submitted = true;
-     
-      task!.submitted_at = new Date().toISOString();
-    },
-    onError: (error: any) => {
-      toast.error(error?.response?.data?.message || "An error occurred", { autoClose: 1000 });
-     
-    },
-  });
 
   const claimMutation = useMutation({
     mutationFn: () => {
@@ -54,14 +35,39 @@ export default function TaskDrawer({
         return state;
       });
       toast.success(response?.data?.message || "Reward claimed successfully", { autoClose: 1000 });
-    
       props.onOpenChange?.(false);
+    
     },
     onError: (error: any) => {
       toast.error(error?.response?.data?.message || "An error occurred", { autoClose: 1000 });
     
     },
   });
+
+
+  const submitMutation = useMutation({
+    mutationFn: () => {
+      return $http.post<{ message: string }>("/clicker/telegram-user-tasks/submit", {
+        telegram_user_id: user.id, // Pass the user ID
+        task_id: task?.id, // Pass the task ID
+        code: task?.code || null, // Optional, if task type is 'code'
+      });
+    },
+    onSuccess: (response) => {
+      toast.success(response?.data?.message || "Task submitted successfully", { autoClose: 1000 });
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      task!.is_submitted = true;
+     
+      task!.submitted_at = new Date().toISOString();
+      claimMutation.mutate()
+    },
+    onError: (error: any) => {
+      toast.error(error?.response?.data?.message || "An error occurred", { autoClose: 1000 });
+     
+    },
+  });
+
+ 
 
   if (!task) return null;
 
@@ -80,7 +86,9 @@ export default function TaskDrawer({
         <Price amount={task.reward_coins.toLocaleString()} className="justify-center text-xl" />
       </div>
   
-        <Button asChild className="w-full rounded-xl mt-10" onClick={() => submitMutation.mutate()}>
+        <Button asChild className="w-full rounded-xl mt-10" onClick={()=>{
+      setTimeout(()=>{setActive(true)},4000)
+    }}>
           <a href={task.link} target="_blank">
             {task.action_name}
           </a>
@@ -89,8 +97,8 @@ export default function TaskDrawer({
       {!task.is_rewarded  && (
         <Button
           className="w-full rounded-xl mt-6"
-          disabled={!task.is_submitted}
-          onClick={() => claimMutation.mutate()}
+          disabled={!active}
+          onClick={() => submitMutation.mutate()}
         >
           {claimMutation.isPending && (
             <Loader2Icon className="w-6 h-6 mr-2 animate-spin" />

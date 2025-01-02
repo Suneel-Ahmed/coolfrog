@@ -3,7 +3,9 @@ import { cn } from "../lib/utils";
 import { $http } from "@/lib/http";
 import { toast } from "react-toastify";
 import { useUserStore } from "@/store/user-store";
+import { uesStore } from "@/store";
 import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 const links = [
   { name: "Home", link: "/", image: "/images/explore.png" },
   { name: "Offical", link: "/offical", image: "/images/logo/offical.png" },
@@ -15,22 +17,37 @@ const links = [
 export default function AppBar() {
   const { pathname } = useLocation();
   const user = useUserStore();
+  const {officalTasks} = uesStore()
   const navigate = useNavigate();
 
-  const missions:any = useQuery({
+  const { data: missions, refetch: refetchMissions } :any = useQuery({
     queryKey: [`/clicker/offical/check/${user.id}`],
     queryFn: () =>
       $http.$get(`/clicker/offical/check/${user.id}`),
     staleTime: 1000 * 60,
   });
-  console.log("dasd" , missions?.data?.allTasksCompleted)
+
+
+  useEffect(()=>{
+    if (officalTasks) {
+      // Refetch both queries
+      Promise.all([refetchMissions()]).then(() => {
+        uesStore.setState({
+          officalTasks : false
+        })
+     
+      });
+    }
+  },[officalTasks])
+
 const handleClick = (link: string) => {
-  if (missions?.data?.allTasksCompleted || link === "/" || link === "/offical" || link === "/referrals") {
+  if (missions?.allTasksCompleted || link === "/" || link === "/offical" || link === "/referrals") {
     navigate(link); // Navigate to the link
   } else {
     toast.error("Must Complete official tasks", { autoClose: 1000 });
   }
 };
+
   return (
     <div className="fixed left-0 z-[9999999] w-full px-5 py-0 bottom-2">
       <div className="flex items-center w-full p-2 gap-2 max-w-lg mx-auto rounded-xl bg-[linear-gradient(180deg,rgba(243,161,85,0.00)_66.37%,rgba(243,161,85,0.05)_100%)] backdrop-blur-3xl">

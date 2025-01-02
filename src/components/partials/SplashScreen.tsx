@@ -5,17 +5,17 @@ import YoutubeIcon from "../icons/YoutubeIcon";
 const socialLinks = [
   {
     title: "Telegram",
-    url: "#",
+    url: "https://t.me/bozecoincommunity",
     icon: TelegramIcon,
   },
   {
     title: "Youtube",
-    url: "#",
+    url: "https://www.youtube.com/@BozeCoin",
     icon: YoutubeIcon,
   },
   {
     title: "Twitter",
-    url: "#",
+    url: "https://www.instagram.com/bozecoin/?",
     icon: TwitterIcon,
   },
 ];
@@ -34,7 +34,7 @@ export default function SplashScreen() {
     >
             <div className="flex flex-col mt-auto items-center w-full">
         <div className="flex flex-col items-center w-full pb-6 bg-[url('/images/blur.png')] bg-cover bg-center">
-          <h1 className="text-6xl font-medium text-center uppercase text-shadow">
+          <h1 className="text-4xl font-medium text-center uppercase text-shadow">
             THE Boze Coin
           </h1>
           <img

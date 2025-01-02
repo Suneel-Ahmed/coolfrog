@@ -1,20 +1,11 @@
 import { useEffect, useState } from "react";
-import { TelegramWebApps } from "telegram-webapps-types";
+
 /**
  * Hook to get the initial data from the Telegram Web Apps API already parsed.
  * @example
  * const { hash } = useTelegramInitData();
  * console.log({ hash });
  */
-const fakeData = {
-  user: {
-    id: 8011231,
-    first_name: "test",
-    last_name: "user5",
-    usernames: "",
-  },
-  start_param : ""
-} as TelegramWebApps.WebAppInitData;
 
 function useTelegramInitData() {
   const [data, setData] = useState<any>({});
@@ -34,7 +25,7 @@ function useTelegramInitData() {
       }
     }
     
-    setData( initData ?  fakeData : initData   );
+    setData( initData    );
   }, []);
 
   return data;

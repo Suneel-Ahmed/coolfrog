@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Drawer, { DrawerProps } from "./ui/drawer";
 import { toast } from "react-toastify";
+import { uesStore } from "@/store";
 import { NavLink , useNavigate } from "react-router-dom";
 import axios from "axios";
 // import { useUserStore } from "../store/user-store";
@@ -35,6 +36,9 @@ const [btn , setBtn] = useState(false)
          
           navigate('/offical');
           setMissionChange(!missionChange)
+          uesStore.setState({
+            officalTasks : !missionChange
+          })
           toast.success("Task Completed", { autoClose: 1000 });
           (props.onOpenChange as (value: boolean) => void)(false);
         }

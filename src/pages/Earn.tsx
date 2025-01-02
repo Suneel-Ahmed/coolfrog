@@ -71,76 +71,10 @@ const handleCloseModal = () => setIsModalOpen(false);
         <h1 className="mt-4 text-2xl font-bold text-center uppercase">
           EARN MORE COINS
         </h1>
-        {videoTasks.length > 0 && (
-          <>
-            <p className="mt-2.5 font-medium text-center">Cool Frog YouTube</p>
-            <div className="mt-4 space-y-2">
-              {videoTasks.sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()).map((item : any) => (
-                <ListItem
-                  key={item.id}
-                  title={item.name}
-                  subtitle={
-                    <Price amount={`+${item.reward_coins.toLocaleString()}`} />
-                  }
-                  image={ item?.image ? `${import.meta.env.VITE_API_URL}/${item?.image}` : "/images/youtube.png"}
-                  onClick={() => {
-                    setActiveTask(item);
-                    setIsTaskDrawerOpen(true);
-                  }}
-                  action={
-                    item.is_rewarded ? (
-                      <CheckIcon className="w-6 h-6 text-[#27D46C]" />
-                    ) : undefined
-                  }
-                  disabled={item.is_rewarded}
-                />
-              ))}
-            </div>
-          </>
-        )}
-        <p className="mt-8 font-medium text-center">Daily Tasks</p>
-        <div className="mt-4 space-y-2">
-          <ListItem
-            title={"Daily reward"}
-            image="/images/daily-task.png"
-            onClick={() => setIsDailyDrawerOpen(true)}
-          />
-        </div>
-        {otherTasks.length > 0 && (
-          <>
-            <p className="mt-8 font-medium text-center">All Tasks</p>
-            <div className="mt-4 space-y-2">
-              {otherTasks.sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-              .map((item : any) => (
-                <ListItem
-                  key={item.id}
-                  title={item.name}
-                  subtitle={
-                    <Price amount={`+${item.reward_coins.toLocaleString()}`} />
-                  }
-                  image={ item?.image ? `${import.meta.env.VITE_API_URL}/${item?.image}` : "/images/bounty.png"}
-                  className={cn(
-                    "disabled:opacity-50 disabled:mix-blend-luminosity"
-                  )}
-                  disabled={item.is_rewarded}
-                  action={
-                    item.is_rewarded ? (
-                      <CheckIcon className="w-6 h-6 text-[#27D46C]" />
-                    ) : undefined
-                  }
-                  onClick={() => {
-                    setActiveTask(item);
-                    setIsTaskDrawerOpen(true);
-                  }}
-                />
-              ))}
-            </div>
-          </>
-        )}
-       {verifyTasks.length > 0 && (
+        {verifyTasks.length > 0 && (
   <>
     <p className="mt-8 font-medium text-center">All Tasks</p>
-    <div className="mt-4 space-y-2">
+    <div className="mt-2 space-y-2">
       {verifyTasks
         .sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
         .map((item: any) => (
@@ -169,6 +103,78 @@ const handleCloseModal = () => setIsModalOpen(false);
     </div>
   </>
 )}
+ {otherTasks.length > 0 && (
+          <>
+           
+            <div className="mt-2 space-y-2">
+              {otherTasks.sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+              .map((item : any) => (
+                <ListItem
+                  key={item.id}
+                  title={item.name}
+                  subtitle={
+                    <Price amount={`+${item.reward_coins.toLocaleString()}`} />
+                  }
+                  image={ item?.image ? `${import.meta.env.VITE_API_URL}/${item?.image}` : "/images/bounty.png"}
+                  className={cn(
+                    "disabled:opacity-50 disabled:mix-blend-luminosity"
+                  )}
+                  disabled={item.is_rewarded}
+                  action={
+                    item.is_rewarded ? (
+                      <CheckIcon className="w-6 h-6 text-[#27D46C]" />
+                    ) : undefined
+                  }
+                  onClick={() => {
+                    setActiveTask(item);
+                    setIsTaskDrawerOpen(true);
+                  }}
+                />
+              ))}
+            </div>
+          </>
+        )}
+        {videoTasks.length > 0 && (
+          <>
+            <div className="mt-2 space-y-2">
+              {videoTasks.sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()).map((item : any) => (
+                <ListItem
+                  key={item.id}
+                  title={item.name}
+                  subtitle={
+                    <Price amount={`+${item.reward_coins.toLocaleString()}`} />
+                  }
+                  image={ item?.image ? `${import.meta.env.VITE_API_URL}/${item?.image}` : "/images/youtube.png"}
+                  onClick={() => {
+                    setActiveTask(item);
+                    setIsTaskDrawerOpen(true);
+                  }}
+                  action={
+                    item.is_rewarded ? (
+                      <CheckIcon className="w-6 h-6 text-[#27D46C]" />
+                    ) : undefined
+                  }
+                  disabled={item.is_rewarded}
+                />
+              ))}
+            </div>
+          </>
+        )}
+
+        
+        <p className="mt-8 font-medium text-center">Daily Tasks</p>
+        <div className="mt-4 space-y-2">
+          <ListItem
+            title={"Daily reward"}
+            image="/images/daily-task.png"
+            onClick={() => setIsDailyDrawerOpen(true)}
+          />
+        </div>
+
+ 
+
+       
+  
 
         {referralTasks.data && referralTasks.data?.length > 0 && (
           <>
@@ -215,6 +221,7 @@ const handleCloseModal = () => setIsModalOpen(false);
       <CodeDrawer
       task={activeCodeTask} 
       onClose={handleCloseModal} 
+      isModalOpen = {isModalOpen} 
       
       />
     }

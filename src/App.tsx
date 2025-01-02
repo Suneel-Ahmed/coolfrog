@@ -11,7 +11,7 @@ import PlayOnYourMobile from "./pages/PlayOnYourMobile";
 
 import useTelegramInitData from "./hooks/useTelegramInitData";
 
-// import { retrieveLaunchParams } from '@telegram-apps/sdk-react';
+import { retrieveLaunchParams } from '@telegram-apps/sdk-react';
 
 const webApp = window.Telegram.WebApp;
 const isDisktop = import.meta.env.DEV
@@ -22,7 +22,7 @@ function App() {
   
   const { user } = useTelegramInitData();
   
-// const [param , setParam] = useState(null)
+const [param , setParam] = useState(null)
     
     
   const [showSplashScreen, setShowSplashScreen] = useState(true);
@@ -32,9 +32,9 @@ function App() {
  
 
   useEffect(() => {
-    // const query = retrieveLaunchParams();
-    // const startParam =  query.startParam;
-    // setParam(startParam)
+    const query = retrieveLaunchParams();
+    const startParam : any =  query.startParam;
+    setParam(startParam)
     webApp.setHeaderColor("#000");
     webApp.setBackgroundColor("#000");
     webApp.expand();
@@ -57,7 +57,7 @@ function App() {
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           username: user.username,
-          referred_by:  "",
+          referred_by: param || "",
         });
         setBearerToken(data.token);
         // setIsFirstLoad(data.first_login);

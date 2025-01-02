@@ -1,31 +1,19 @@
-// import { useState } from "react";
 import UserTap from "../components/UserTap";
 import { useUserStore } from "../store/user-store";
-// import { Link } from "react-router-dom";
 import { $http } from "@/lib/http";
 import { useQuery } from "@tanstack/react-query";
-// import { Mission } from "@/types/MissionType";
-// import levelConfig from "@/config/level-config";
-import { uesStore } from "@/store";
+
+
 export default function Home() {
   const user = useUserStore();
-  const { missionTypes } = uesStore();
-  const activeType : any = missionTypes?.[0];
-  const missions : any  = useQuery({
-    queryKey: ["/clicker/offical_tasks"],
-    queryFn: () =>
-      $http.$get<any[]>(`/clicker/offical_tasks`),
-    staleTime: 0,
-    enabled: !!activeType?.id,
+  
+ 
+
+  const  {data}  = useQuery({
+    queryKey: ["tasks"],
+    queryFn: () => $http.$get<any>(`/clicker/calculated-task/status/${user.id}`),
   });
 
-  const completedTasks : any  = useQuery({
-    queryKey: [`/clicker/offical_tasks/status/${user.id}`],
-    queryFn: () =>
-      $http.$get<any[]>(`/clicker/offical_tasks/status/${user.id}`),
-    staleTime: 0,
-    enabled: !!activeType?.id,
-  });
 
   return (
     <div
@@ -65,13 +53,11 @@ export default function Home() {
             <span>{"Season 1"}</span>
           </div>
           {
-            missions &&
-          missions?.data?.missions.length >= 0  
-         &&
+          data &&
           <div className="flex items-center space-x-1">
             <span className="text-xs">Tasks</span>
             <span className="font-bold">
-              {completedTasks?.data?.length} / {missions?.data?.missions.length}
+              {data?.completedTasks} / {data?.alltask}
             </span>
           </div>
           }
@@ -81,7 +67,7 @@ export default function Home() {
           <div
             className="bg-[linear-gradient(180deg,#FBEDE0_0%,#F7B87D_21%,#F3A155_52%,#E6824B_84%,#D36224_100%)] h-full"
             style={{
-              width: `${(completedTasks?.data?.length / missions?.data?.missions.length) * 100}%`,
+              width: `${(data?.completedTasks / data?.alltask) * 100}%`,
             }}
           ></div>
         </div>

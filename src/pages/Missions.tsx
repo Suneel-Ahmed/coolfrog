@@ -16,7 +16,7 @@ export default function Missions() {
       $http.$get(`/clicker/partners`),
     staleTime: 1000 * 60,
   });
-  console.log(missions)
+  
 
   
 
