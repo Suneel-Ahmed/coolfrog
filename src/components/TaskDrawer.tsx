@@ -89,7 +89,7 @@ const [active , setActive] = useState(false)
         <Button asChild className="w-full rounded-xl mt-10" onClick={()=>{
       setTimeout(()=>{setActive(true)},4000)
     }}>
-          <a href={task.link} target="_blank">
+          <a href={task.link} rel="noopener noreferrer" target="_blank">
             {task.action_name}
           </a>
         </Button>

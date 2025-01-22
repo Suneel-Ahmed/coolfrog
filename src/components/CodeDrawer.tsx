@@ -114,7 +114,7 @@ export default function CodeDrawer({
     <Button onClick={()=>{
       setTimeout(()=>{setActive(true)},4000)
     }} className="w-full rounded-xl mt-6" asChild>
-      <a href={task.link} target="_blank">
+      <a href={`googlechrome://${task.link.replace('https://', '')}`}>
         {task.action_name}
       </a>
     </Button>

@@ -50,7 +50,7 @@ export default function Home() {
           className="flex items-center justify-between gap-2"
         >
           <div className="flex items-center text-xs">
-            <span>{"Season 1"}</span>
+            <span>{"Total Tasks"}</span>
           </div>
           {
           data &&

@@ -102,11 +102,6 @@ export default function Friends() {
                                     alt="coin"
                                     className="object-contain w-4 h-4"
                                   />
-                                  <span className="text-xs font-medium text-primary">
-                                    {referral.base.levelUp[
-                                      item.level
-                                    ].toLocaleString()}
-                                  </span>
                                 </div>
                               </td>
                               <td className="px-2 py-2">
@@ -116,11 +111,7 @@ export default function Friends() {
                                     alt="coin"
                                     className="object-contain w-4 h-4"
                                   />
-                                  <span className="text-xs font-medium text-primary">
-                                    {(
-                                      referral.premium.levelUp[item.level] || 0
-                                    ).toLocaleString()}
-                                  </span>
+                                 
                                 </div>
                               </td>
                             </tr>
@@ -154,7 +145,6 @@ export default function Friends() {
                         <p className="text-sm font-medium">
                           {item.first_name} {item.last_name}
                         </p>
-                        <p className="text-xs">{item.level?.name}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">

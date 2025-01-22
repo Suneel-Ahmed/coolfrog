@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useUserStore } from "@/store/user-store";
 // import { Mission } from "@/types/MissionType";
+import { Loader2Icon } from "lucide-react";
 import { useState , useEffect } from "react";
 import {WalletData} from '@/data/data'
 import { toast } from "react-toastify";
@@ -44,7 +45,7 @@ export default function Exchange() {
 
   });
 
- 
+
   useEffect(() => {
     if (changeDATA) {
       // Refetch both queries
@@ -53,7 +54,16 @@ export default function Exchange() {
         setChangeDATA(false);
       });
     }
-  }, [changeDATA, refetchPaymentGet, refetchPaymentStatus]);
+  }, [changeDATA, refetchPaymentGet, refetchPaymentStatus , openDrawer , updatedDrawer]);
+
+  useEffect(()=>{
+    if(changeDATA){
+      window.location.reload()
+    }
+  },[changeDATA])
+  if(!paymentGet){
+    return <div><Loader2Icon className="animate-spin text-primary h-12 w-12 mx-auto mt-5 " /></div>
+  }
 
   return (
     <>
@@ -66,23 +76,28 @@ export default function Exchange() {
             {
   WalletData?.data &&
   WalletData?.data
-    ?.filter((mission) => {
-      // Exclude 'Easypaisa' and 'Jazzcash' if paymentStatus?.data[0]?.locked === 0
+    ?.filter((mission) => {// Exclude 'Easypaisa' and 'Jazzcash' if paymentStatus?.data[0]?.locked === 0
       if ( paymentStatus && paymentStatus[0]?.locked === 0) {
         return mission?.title !== 'Easypaisa' && mission?.title !== 'Jazzcash';
       }
-      // Include all missions otherwise
-      return true;
+      else if(user?.payment_verified === 1 && paymentGet && paymentGet[0]?.method === mission?.title){
+        
+        return user?.payment_verified === 1 && paymentGet && paymentGet[0]?.method === mission?.title;
+      }else if(user?.payment_verified !== 1 && paymentGet && paymentGet[0]?.method !== mission?.title){
+        return mission;
+      }
+  
     })
     ?.slice(0, 4)
     ?.map((mission, key) => (
+   
       <div
         key={key}
         className="flex flex-col py-3 px-3 bg-[#D9D9D9]/10 rounded-xl cursor-pointer"
         onClick={() => {
           if (user?.payment_verified === 1 && paymentGet && paymentGet[0]?.method === mission?.title ) {
-            setSelectedMission({id : paymentGet && paymentGet[0]?.id ,   logo : mission.logo,
-              title : mission.title});
+            setSelectedMission({id : paymentGet && paymentGet[0]?.id ,   logo : mission?.logo,
+              title : mission?.title});
             setUpdatedDrawer(true)
             setOpenDrawer(false);
           } else if(user?.payment_verified === 1 && paymentGet && paymentGet[0]?.method !== mission?.title) {
@@ -112,6 +127,7 @@ export default function Exchange() {
           </div>
         </div>
       </div>
+      
     ))
 }
 
@@ -128,6 +144,7 @@ export default function Exchange() {
       />
         <UpdateExchangeDrawer
         open={updatedDrawer}
+        paymentGet = {paymentGet}
         onOpenChange={setUpdatedDrawer}
         mission={selectedMission}
         changeDATA = {changeDATA}

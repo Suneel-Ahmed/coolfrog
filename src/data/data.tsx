@@ -2,7 +2,7 @@ export const WalletData = {
    data : [
     {
         id : 1,
-        logo : "images/wallet/Binance.png",
+        logo : "images/wallet/123.png",
         title : "Binance",
     },
     {

@@ -8,6 +8,7 @@ import CheckIcon from "@/components/icons/CheckIcon";
 import CodeDrawer from "@/components/CodeDrawer";
 import { useQuery } from "@tanstack/react-query";
 import { $http } from "@/lib/http";
+import { DailyTaskType } from "@/types/TaskType";
 import { cn } from "@/lib/utils";
 import { useUserStore } from "@/store/user-store";
 
@@ -36,6 +37,16 @@ const handleCloseModal = () => setIsModalOpen(false);
     queryKey: ["tasks"],
     queryFn: () => $http.$get<any>(`/clicker/tasks/${user.id}`),
   });
+
+
+  const dailyTasks = useQuery({
+     queryKey: ["daily-tasks"],
+     queryFn: () => $http.$get<DailyTaskType[]>("/clicker/daily-tasks"),
+     staleTime: Infinity,
+   });
+
+   const CheckingDailytasks = !dailyTasks.data?.some((item) => item.available && !item.completed)
+  
 
 
   const referralTasks : any = useQuery({
@@ -71,12 +82,28 @@ const handleCloseModal = () => setIsModalOpen(false);
         <h1 className="mt-4 text-2xl font-bold text-center uppercase">
           EARN MORE COINS
         </h1>
+        {
+            !CheckingDailytasks  && (
+              <>
+         
+          <p className="mt-8 font-medium text-center">Daily Tasks</p>
+        <div className="mt-4 space-y-2">
+          <ListItem
+            title={"Daily reward"}
+            image="/images/daily-task.png"
+            onClick={() => setIsDailyDrawerOpen(true)}
+            />
+        </div>
+        </>
+            )
+          }
         {verifyTasks.length > 0 && (
   <>
+
     <p className="mt-8 font-medium text-center">All Tasks</p>
     <div className="mt-2 space-y-2">
       {verifyTasks
-        .sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+        .sort((a: any, b: any) => new Date(b.created_at).getTime() + new Date(a.created_at).getTime())
         .map((item: any) => (
           <ListItem
             key={item.id}
@@ -107,7 +134,7 @@ const handleCloseModal = () => setIsModalOpen(false);
           <>
            
             <div className="mt-2 space-y-2">
-              {otherTasks.sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+              {otherTasks.sort((a: any, b: any) => new Date(b.created_at).getTime() + new Date(a.created_at).getTime())
               .map((item : any) => (
                 <ListItem
                   key={item.id}
@@ -137,7 +164,7 @@ const handleCloseModal = () => setIsModalOpen(false);
         {videoTasks.length > 0 && (
           <>
             <div className="mt-2 space-y-2">
-              {videoTasks.sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()).map((item : any) => (
+              {videoTasks.sort((a: any, b: any) => new Date(b.created_at).getTime() + new Date(a.created_at).getTime()).map((item : any) => (
                 <ListItem
                   key={item.id}
                   title={item.name}
@@ -161,6 +188,12 @@ const handleCloseModal = () => setIsModalOpen(false);
           </>
         )}
 
+
+
+{
+  CheckingDailytasks  && (
+    <>
+    
         
         <p className="mt-8 font-medium text-center">Daily Tasks</p>
         <div className="mt-4 space-y-2">
@@ -170,7 +203,9 @@ const handleCloseModal = () => setIsModalOpen(false);
             onClick={() => setIsDailyDrawerOpen(true)}
           />
         </div>
-
+        </>
+  )
+}
  
 
        

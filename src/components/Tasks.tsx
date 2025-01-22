@@ -56,7 +56,7 @@ useEffect(() => {
     
     
     <div className="mt-10">
-          <div className="flex gap-4">
+          <div className="flex justify-center">
             
           {missions?.missions &&
   missions?.missions?.some(
@@ -65,7 +65,7 @@ useEffect(() => {
         (item: any) => item.task_id === mission.id && item.user_id === user.id
       )
   ) && (
-    <h3 className="text-xs font-bold uppercase">
+    <h3 className="text-md text-center font-medium uppercase ">
       Must Complete
     </h3>
   )}

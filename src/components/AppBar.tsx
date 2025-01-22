@@ -27,7 +27,6 @@ export default function AppBar() {
     staleTime: 1000 * 60,
   });
 
-
   useEffect(()=>{
     if (officalTasks) {
       // Refetch both queries

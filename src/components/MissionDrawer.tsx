@@ -65,7 +65,9 @@ const [btn , setBtn] = useState(false)
 target="_blank"
 onClick={()=>setBtn(true)}
               className="px-5 bg-gray-300 text-nowrap text-center text-black py-3 h-fit rounded-xl mt-4 "
+              
               to={mission.link}
+              rel="noopener noreferrer"
               >
      {mission.code}
     </NavLink>

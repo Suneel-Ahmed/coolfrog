@@ -23,12 +23,12 @@ export default function ExchangeDrawer({
   const [accountHolder , setAccountHolder] = useState("")
   const [accountNumber , setAccountNumber] = useState("")
  
-  if(mission === null) return null
+  if(mission === null && !user?.id && token) return null;
   
 
   const handleSubmit = async ()=>{
     try {
-      if(accountHolder && accountNumber){
+      if(accountHolder !== "" || accountNumber !== ""){
        
         if(user?.payment_verified === 1) {
           return toast.success('You Already Integrated Payment Method', { autoClose: 1000 })
@@ -37,7 +37,7 @@ export default function ExchangeDrawer({
         const res = await axios.post(
           `${import.meta.env.VITE_API_URL}/api/clicker/payment-methods`,
           { 
-            user_id : user.id,
+            user_id : user?.id,
             method : mission?.title,
             account_holder_name : accountHolder,
             account_number : accountNumber
@@ -49,24 +49,29 @@ export default function ExchangeDrawer({
             },
           }
         );
-if(res.data){
+if(res?.data){
   toast.success('Payment Method Integrated', { autoClose: 1000 })
   setAccountNumber("");
   setAccountHolder("");
-  setChangeDATA(!changeDATA);
+  setTimeout(()=>{
+    setChangeDATA(!changeDATA);
+  },2000)
 }
       }else{
         toast.error('please fill the fields', { autoClose: 1000 })
         setAccountNumber("");
         setAccountHolder("");
-        setChangeDATA(!changeDATA);
+
       }
       
     } catch (error) {
-      console.log(error)
-      setChangeDATA(!changeDATA);
+      toast.error(JSON.stringify(error), { autoClose: 1000 })
       setAccountNumber("");
       setAccountHolder("");
+      console.log(error)
+      setTimeout(()=>{
+        setChangeDATA(!changeDATA);
+      },2000);
     }
   }
 
@@ -89,7 +94,7 @@ if(res.data){
         <input onChange={(e)=>setAccountHolder(e.target.value)} value={accountHolder} type="text" placeholder="User Name" className="w-[300px] mx-auto px-3 py-2 rounded-xl bg-transparent text-white border " />
       </div>
       <div className="flex items-center justify-center mx-auto mt-6 gap-20 text-black">
-        <input onChange={(e)=>setAccountNumber(e.target.value)} value={accountNumber} type="text" placeholder="User Id" className="w-[300px] mx-auto px-3 py-2 rounded-xl bg-transparent text-white border " />
+        <input onChange={(e)=>setAccountNumber(e.target.value)} value={accountNumber} type="number" placeholder="User Id" className="w-[300px] mx-auto px-3 py-2 rounded-xl bg-transparent text-white border " />
       </div>
       
       
