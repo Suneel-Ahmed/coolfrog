@@ -19,7 +19,7 @@ export default function CodeDrawer({
   const [active , setActive] = useState(false)
   const queryClient = useQueryClient();
   const user = useUserStore();
-
+ console.log(task.type)
   const claimMutation = useMutation({
     mutationFn: () => {
 
@@ -64,13 +64,20 @@ export default function CodeDrawer({
     },
   });
 
-   
-   
+  const openInChrome = (url: string): void => {
+    if (window.Telegram.WebApp.platform === 'tdesktop') {
+      const chromeUrl = `googlechrome://${url.replace('https://', '').replace('http://', '')}`;
+      window.open(chromeUrl, '_blank', 'noopener,noreferrer');
+    } else {
+      // Fallback to opening in a new tab if tg.openExternal is not available
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
+  };
 
   if (!task) return null;
 
   return (
-    <div className="fixed inset-0 z-[999999] flex backdrop-blur-md  justify-center bg-[#272a2f]/[60%]">
+    <div className="fixed inset-0 z-[999] flex backdrop-blur-md  justify-center bg-[#272a2f]/[60%]">
   <div
     className="  flex  flex-col rounded-lg p-8 max-w-md w-full overflow-y-auto max-h-[85vh]"
   >
@@ -91,6 +98,7 @@ export default function CodeDrawer({
           : "/images/bounty.png"
       }
       alt={task.name}
+       loading="lazy" width="500" height="500"
       className="object-contain h-24 mx-auto"
     />
     <h2 className="text-2xl font-medium text-center mt-6">{task.name}</h2>
@@ -105,29 +113,37 @@ export default function CodeDrawer({
         onChange={(e) => setCode(e.target.value)}
         value={code}
         type="text"
-        disabled = {!active}
+        disabled = {task.type === "blog" ? false : !active}
         placeholder="Enter Your Code"
         className="border bg-transparent w-full py-3 rounded-xl px-4"
         required
       />
     </div>
+    {task.type !== "blog" && 
     <Button onClick={()=>{
-      setTimeout(()=>{setActive(true)},4000)
+      openInChrome(task?.link);
+      setTimeout(()=>{setActive(true)},10000)
     }} className="w-full rounded-xl mt-6" asChild>
-      <a href={`googlechrome://${task.link.replace('https://', '')}`}>
+      <a href={`googlechrome://${task.link.replace('https://', '')}`}  rel="noopener noreferrer">
         {task.action_name}
       </a>
     </Button>
+    }
     <Button
       className="w-full rounded-xl mt-6"
       onClick={() => {
-        if (task && task.type === "verify_code" && code !== task.code) {
+        if (
+          task &&
+          (task.type === "verify_code" || task.type === "blog") &&
+          code !== task.code
+        ) {
           toast.error("Invalid Code", { autoClose: 1000 });
           return;
         }
+      
         submitMutation.mutate();
       }}
-    disabled={code === "" || !active}
+    disabled={task.type === "blog" && code !== "" ? false : !active}
     >
       {claimMutation.isPending && (
         <Loader2Icon className="w-6 h-6 mr-2 animate-spin" />

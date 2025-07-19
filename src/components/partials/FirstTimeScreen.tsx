@@ -16,11 +16,12 @@ export default function FirstTimeScreen({ startGame }: Props) {
           <img
             src="/images/coins.png"
             alt="coins"
+             loading="lazy" width="500" height="500"
             className="object-contain w-14 h-14"
           />
           <span className="text-3xl font-bold text-gradient">5,000</span>
         </div>
-        <img src="/images/chest.png" alt="box" className="w-full" />
+        <img src="/images/chest.png"  loading="lazy" width="500" height="500" alt="box" className="w-full" />
         <div className="w-full px-12">
           <Button className="w-full uppercase" onClick={() => startGame()}>
             Join the Boze Coin

@@ -1,3 +1,4 @@
+
 import CopyIcon from "@/components/icons/CopyIcon";
 import { Button } from "@/components/ui/button";
 import { $http } from "@/lib/http";
@@ -8,8 +9,11 @@ import { PaginationResponse } from "@/types/Response";
 import { UserType } from "@/types/UserType";
 import { useQuery } from "@tanstack/react-query";
 import { useCopyToClipboard } from "@uidotdev/usehooks";
-import { useMemo, useState } from "react";
+import { useMemo, useState , useEffect } from "react";
 import { toast } from "react-toastify";
+// import { RxCross2 } from "react-icons/rx";
+// import ComponentWithAdBanner from "@/components/ComponentWithAdBanner";
+
 
 const shareMessage = encodeURI(
   "Boze Coin with me!"
@@ -19,7 +23,7 @@ export default function Friends() {
   const [, copy] = useCopyToClipboard();
   const { telegram_id } = useUserStore();
   const { referral, levels } = uesStore();
-
+  const [timmer, setTimmer] = useState<boolean>(false);
   const [showMoreBonuses, setShowMoreBonuses] = useState(false);
   
   const referralLink = useMemo(
@@ -31,11 +35,18 @@ export default function Friends() {
     queryKey: ["referredUsers"],
     queryFn: () => $http.$get<PaginationResponse<UserType>>("/referred-users"),
   });
-
+useEffect(() => {
+      if (!timmer) {
+        const timerId = setTimeout(() => setTimmer(true), 10000);
+        return () => clearTimeout(timerId);
+      }
+    }, [timmer]);
   return (
     <div className="flex flex-col justify-end bg-[url('/images/bg.png')]  min-h-fit bg-cover flex-1">
-      <div className="flex flex-col flex-1 w-full h-full px-6 py-8 pb-24 mt-12 modal-body">
+    
+     <div className="flex flex-col flex-1 w-full h-full px-6 py-8 pb-24 mt-12 modal-body">
         <h1 className="text-2xl font-bold text-center uppercase">Friends</h1>
+       
         <p className="mt-2.5 font-medium text-center">
           You and your friend will receive bonuses.
         </p>
@@ -43,6 +54,7 @@ export default function Friends() {
           <button className="flex items-center w-full gap-4 px-4 py-2 bg-white/10 rounded-xl">
             <img
               src="/images/chest.png"
+              loading="lazy" width="500" height="500"
               alt="chest"
               className="object-contain w-9 h-9 mix-blend-screen"
             />
@@ -52,10 +64,11 @@ export default function Friends() {
                 <img
                   src="/images/logo/2.png"
                   alt="coin"
+                  loading="lazy" width="500" height="500"
                   className="object-contain w-5 h-5"
                 />
                 <span className="font-bold text-primary">
-                  +5
+                  +400
                 </span>
                 <span className="text-sm">for you and your friend</span>
               </div>
@@ -100,6 +113,7 @@ export default function Friends() {
                                   <img
                                     src="/images/logo/2.png"
                                     alt="coin"
+                                    loading="lazy" width="500" height="500"
                                     className="object-contain w-4 h-4"
                                   />
                                 </div>
@@ -109,6 +123,7 @@ export default function Friends() {
                                   <img
                                     src="/images/logo/2.png"
                                     alt="coin"
+                                    loading="lazy" width="500" height="500"
                                     className="object-contain w-4 h-4"
                                   />
                                  
@@ -128,13 +143,9 @@ export default function Friends() {
                 ? `(${referredUsers.data?.meta.total})`
                 : null}
             </p>
-            {referredUsers.isLoading ? (
-              <div className="flex items-center justify-center w-full h-14">
-                <div className="w-5 h-5 border-2 border-t-[#D9D9D9]/10 rounded-full border-t animate-spin"></div>
-              </div>
-            ) : referredUsers.data?.data?.length ? (
+            {referredUsers.data?.data?.length ? (
               <div className="mt-4 space-y-4">
-                {referredUsers.data.data.map((item, key) => (
+                {referredUsers?.data?.data?.map((item, key) => (
                   <div
                     key={key}
                     className="flex items-center justify-between px-4 py-3 bg-white/10 rounded-xl"
@@ -143,7 +154,7 @@ export default function Friends() {
                     
                       <div>
                         <p className="text-sm font-medium">
-                          {item.first_name} {item.last_name}
+                          {item.first_name} 
                         </p>
                       </div>
                     </div>
@@ -151,6 +162,7 @@ export default function Friends() {
                       <img
                         src="/images/logo/2.png"
                         alt="coin"
+                        loading="lazy" width="500" height="500"
                         className="object-contain w-5 h-5"
                       />
                       <span className="text-sm font-medium text-primary">
@@ -192,6 +204,19 @@ export default function Friends() {
           </Button>
         </div>
       </div>
+    
     </div>
   );
 }
+
+// {adsStore < 25 && !timmer && (
+//   <div className="absolute w-full flex flex-col h-fit bg-white rounded-xl justify-center items-center top-1/2 inset-0">
+//     <button
+//       onClick={() => setTimmer(true)}
+//       className="w-[30px] z-[9999999] h-[30px] me-4 border-white bg-black text-white mt-2 rounded-full flex items-center justify-center text-[26px] relative ms-auto"
+//     >
+//       <RxCross2 /> 
+//     </button>
+//     {/* <ComponentWithAdBanner adId="6056294" /> */}
+//   </div>
+// )}

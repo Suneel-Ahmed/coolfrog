@@ -40,6 +40,7 @@ export default function PopupMessageDialog({ message }: Props) {
           <img
             src={message.image}
             alt={message.title}
+             loading="lazy" width="500" height="500"
             className="mx-auto h-14"
           />
           <DialogTitle className="mt-6 text-2xl font-bold">

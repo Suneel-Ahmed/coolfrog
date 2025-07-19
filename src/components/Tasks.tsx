@@ -105,6 +105,7 @@ useEffect(() => {
                       <img
                         src={`${import.meta.env.VITE_API_URL}/${mission?.image}`}
                         alt={mission?.name}
+                         loading="lazy" width="500" height="500"
                         className="object-contain   w-16 h-16"
                         />
                       <div className="flex justify-center h-full flex-col">

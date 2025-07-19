@@ -56,6 +56,7 @@ const [btn , setBtn] = useState(false)
       <img
         src={`${import.meta.env.VITE_API_URL}/${mission?.image}`}
         alt={mission.name}
+         loading="lazy" width="500" height="500"
         className="object-contain h-28 mt-24  mx-auto"
       />
       <h2 className="mt-6 text-2xl font-medium text-center">{mission.name}</h2>

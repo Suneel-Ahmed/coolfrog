@@ -34,12 +34,13 @@ export default function SplashScreen() {
     >
             <div className="flex flex-col mt-auto items-center w-full">
         <div className="flex flex-col items-center w-full pb-6 bg-[url('/images/blur.png')] bg-cover bg-center">
-          <h1 className="text-4xl font-medium text-center uppercase text-shadow">
+          <h1 className="text-3xl montserrat font-medium text-center uppercase text-shadow">
             THE Boze Coin
           </h1>
           <img
             src="/images/loader.png"
             alt="loader"
+             loading="lazy" width="500" height="500"
             className="mt-3 animate-spin"
           />
           <p className="mt-3 text-sm font-bold uppercase text-primary">

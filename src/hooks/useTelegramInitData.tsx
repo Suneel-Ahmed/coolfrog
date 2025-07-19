@@ -7,11 +7,12 @@ import { useEffect, useState } from "react";
  * console.log({ hash });
  */
 
+
 // const fakeData = {
 //   user: {
-//     id: 1,
-//     first_name: "John",
-//     last_name: "Doe",
+//     id: 200,
+//     first_name: "yaasdah",
+//     last_name: "asd",
 //     usernames: "johndoe",
 //   },
 

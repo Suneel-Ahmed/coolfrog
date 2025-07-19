@@ -17,12 +17,13 @@ export default function ListItem({
   ...props
 }: Props) {
   return (
-    <button
-      className={cn(
-        "group flex items-center w-full gap-4 px-4 py-2 bg-white/10 rounded-xl",
+    <div  className={cn(
+      "group flex items-center w-full gap-4 px-4 py-2 bg-white/10 rounded-xl",
 
-        className
-      )}
+      className
+    )} >
+    <button
+     className="group flex items-center w-full gap-4 px-4 py-2 "
       type="button"
       {...props}
     >
@@ -30,6 +31,7 @@ export default function ListItem({
         <img
         src={image}
           alt={title}
+           loading="lazy" width="500" height="500"
           className="object-contain w-9 h-9 mix-blend-screen"
         />
       )}
@@ -37,7 +39,8 @@ export default function ListItem({
         <p>{title}</p>
         {subtitle}
       </div>
-      <div className="ml-auto">{action}</div>
     </button>
+      <div className="ml-auto cursor-pointer z-30">{action} </div>
+    </div>
   );
 }

@@ -13,6 +13,7 @@ export default function Price({ amount, className, ...props }: Props) {
       <img
         src="/images/logo/2.png"
         alt="coin"
+         loading="lazy" width="500" height="500"
         className="object-contain w-4 h-4"
       />
       <span className="font-bold">{amount}</span>

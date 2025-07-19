@@ -37,7 +37,7 @@ export default function DailyDrawer({ ...props }: DrawerProps) {
   });
   return (
     <Drawer {...props}>
-      <img src="/images/logo/logo.png" alt="coins-3" className="mx-auto h-28" />
+      <img src="/images/logo/logo.png" alt="coins-3"  loading="lazy" width="500" height="500" className="mx-auto h-28 w-auto" />
       <h2 className="mt-6 text-2xl font-bold text-center">Daily Reward</h2>
       <p className="mt-2.5 text-center font-medium">
         Acquire coins for logging into the game daily without skipping
@@ -56,6 +56,7 @@ export default function DailyDrawer({ ...props }: DrawerProps) {
             <img
               src="/images/logo/2.png"
               alt="coin"
+               loading="lazy" width="20" height="20"
               className="object-contain w-5 h-5"
             />
             <p

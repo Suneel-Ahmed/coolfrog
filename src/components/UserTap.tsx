@@ -41,6 +41,7 @@ const navigate = useNavigate()
           onClick={handleClick}
             src={"/images/logo/logo.png"}
             alt="level image"
+            loading="lazy" width="500" height="500"
             className="object-contain  max-w-full me-10 w-[100vw] h-auto "
           />
         </div>

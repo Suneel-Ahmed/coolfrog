@@ -77,7 +77,7 @@ export default function Exchange() {
   WalletData?.data &&
   WalletData?.data
     ?.filter((mission) => {// Exclude 'Easypaisa' and 'Jazzcash' if paymentStatus?.data[0]?.locked === 0
-      if ( paymentStatus && paymentStatus[0]?.locked === 0) {
+      if ( paymentStatus && paymentStatus[0]?.locked !== 0) {
         return mission?.title !== 'Easypaisa' && mission?.title !== 'Jazzcash';
       }
       else if(user?.payment_verified === 1 && paymentGet && paymentGet[0]?.method === mission?.title){
@@ -118,6 +118,7 @@ export default function Exchange() {
               <img
                 src={mission.logo}
                 alt={mission.title}
+                 loading="lazy" width="500" height="500"
                 className="object-contain w-auto h-16"
               />
             </div>

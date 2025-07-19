@@ -23,6 +23,7 @@ type StoreStateType = {
   missionTypes: MissionType[];
   totalReferals: number;
   officalTasks : boolean;
+  adsStore : number;
 };
 
 export const uesStore = create<StoreStateType>(() => ({
@@ -52,5 +53,6 @@ export const uesStore = create<StoreStateType>(() => ({
     },
   },
   missionTypes: [],
-  officalTasks : false
+  officalTasks : false,
+  adsStore : 0
 }));

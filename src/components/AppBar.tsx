@@ -64,6 +64,7 @@ const handleClick = (link: string) => {
               <img
                 src={link.image}
                 alt={link.name}
+                 loading="lazy" width="500" height="500"
                 className={cn(
                   "w-7 h-7 object-contain filter grayscale",
                   pathname === link.link && "filter-none"

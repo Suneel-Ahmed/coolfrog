@@ -46,6 +46,7 @@ export default function ReferralTaskDrawer({
       <img
         src={"/images/bounty.png"}
         alt={task.title}
+         loading="lazy" width="500" height="500"
         className="object-contain h-24 mx-auto"
       />
       <h2 className="text-2xl font-medium text-center mt-9">{task.title}</h2>

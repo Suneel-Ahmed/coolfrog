@@ -82,6 +82,7 @@ export default function ExchangeDrawer({
       <img
         src={mission?.logo}
         alt={mission?.title}
+        loading="lazy" width="500" height="500"
         className="object-contain h-32 mx-auto"
       />
       <h2 className="mt-6 text-2xl font-medium text-center">{mission?.title}</h2>
